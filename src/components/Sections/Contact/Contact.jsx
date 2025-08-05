@@ -1,9 +1,9 @@
-// src/components/sections/Contact/Contact.jsx
+// src/components/Sections/Contact/Contact.jsx
 import React from 'react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
-import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
+import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
 import ContactForm from './ContactForm';
-import { personalInfo } from '../../../data/personalInfo';
+import { personalInfo } from '../../Data/PersonalInfo';
 
 const Contact = () => {
   const [elementRef, isVisible] = useIntersectionObserver();

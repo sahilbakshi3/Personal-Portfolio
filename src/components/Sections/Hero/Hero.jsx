@@ -1,7 +1,7 @@
-// src/components/sections/Hero/Hero.jsx
+// src/components/Sections/Hero/Hero.jsx
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
+import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
 import Button from '../../common/Button/Button';
 
 const Hero = () => {

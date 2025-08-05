@@ -1,13 +1,12 @@
-import Header from './components/layout/Header/Header';
-import Footer from './components/layout/Footer/Footer';
-import Hero from './components/sections/Hero/Hero';
-import About from './components/sections/About/About';
-import Skills from './components/sections/Skills/Skills';
-import Projects from './components/sections/Projects/Projects';
-import Contact from './components/sections/Contact/Contact';
+import Header from './components/Layout/Header/Header';
+import Footer from './components/Layout/Footer/Footer';
+import Hero from './components/Sections/Hero/Hero';
+import About from './components/Sections/About/About';
+import Skills from './components/Sections/Skills/Skills';
+import Projects from './components/Sections/Projects/Projects';
+import Contact from './components/Sections/Contact/Contact';
 import { ThemeProvider } from './context/ThemeContext';
-import './App.css';
-
+import './app.css';
 
 function App() {
   return (

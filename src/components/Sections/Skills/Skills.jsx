@@ -1,8 +1,8 @@
-// src/components/sections/Skills/Skills.jsx
+// src/components/Sections/Skills/Skills.jsx
 import React from 'react';
-import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
+import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
 import SkillBar from './SkillBar';
-import { skills } from '../../../data/skills';
+import { skills } from '../../Data/Skills';
 
 const Skills = () => {
   const [elementRef, isVisible] = useIntersectionObserver();

@@ -1,9 +1,9 @@
-// src/components/sections/Projects/Projects.jsx
+// src/components/Sections/Projects/Projects.jsx
 import React, { useState } from 'react';
-import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
+import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
 import ProjectCard from './ProjectCard';
 import Button from '../../common/Button/Button';
-import { projects } from '../../../data/projects';
+import { projects } from '../../Data/Projects';
 
 const Projects = () => {
   const [elementRef, isVisible] = useIntersectionObserver();
