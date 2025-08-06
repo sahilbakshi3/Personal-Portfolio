@@ -159,18 +159,21 @@ const About = () => {
 
               {/* CTA Button */}
               <div className="pt-6">
-                <Button
-                  onClick={() => {
-                    // This would typically trigger a resume download
-                    console.log('Resume download triggered');
-                  }}
-                  variant="primary"
-                  size="lg"
-                  className="w-full sm:w-auto"
-                >
-                  <Download size={20} className="mr-2" />
-                  Download Resume
-                </Button>
+                <a
+                    href="/SAHIL_BAKSHI_RESUME.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
+                    <Button
+                        variant="primary"
+                        size="lg"
+                        className="w-full sm:w-auto"
+                    >
+                        <Download size={20} className="mr-2" />
+                        View Resume
+                    </Button>
+                </a>
+
               </div>
             </div>
           </div>

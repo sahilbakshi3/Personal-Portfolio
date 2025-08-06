@@ -1,9 +1,9 @@
-// src/components/Layout/Header/Header.jsx
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import ThemeToggle from '../../common/ThemeToggle/ThemeToggle';
 import Navigation from './Navigation';
+import logo from '../../Assets/Images/my_logo.png'; // ✅ Correct path to your logo
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,14 +41,30 @@ const Header = () => {
     >
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo - Left aligned */}
-          <div className="text-3xl font-bold">
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Portfolio
-            </span>
-          </div>
           
-          {/* Desktop Navigation & Theme Toggle - Right aligned */}
+          {/* ✅ Logo - Top left corner with dark mode glow */}
+          <a 
+            href="#home" 
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('home');
+            }}
+            className="flex items-center space-x-2 cursor-pointer"
+          >
+            <img 
+              src={logo} 
+              alt="SB Logo" 
+              className={`
+                w-10 h-10 rounded-full object-cover transition-transform duration-200 hover:scale-105
+                ring-0 border-none
+                bg-white dark:bg-gray-900
+                ${isDarkMode ? 'shadow-[0_0_12px_rgba(147,51,234,0.6)]' : 'shadow-sm'}
+              `}
+            />
+            <span className="sr-only">Go to Home</span>
+          </a>
+
+          {/* Desktop Navigation & Theme Toggle */}
           <div className="flex items-center space-x-6">
             <Navigation 
               navItems={navItems}
