@@ -1,6 +1,12 @@
 /* App.css */
 .App {
   text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure smooth transitions for all elements */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Custom scrollbar */
@@ -39,10 +45,34 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Dark mode body styles */
+html.dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
 /* Line clamp utility */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Ensure all text elements inherit proper colors */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #f9fafb;
+}
+
+.dark p, .dark span, .dark div {
+  color: inherit;
 }

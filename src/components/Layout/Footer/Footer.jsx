@@ -1,6 +1,6 @@
 // src/components/Layout/Footer/Footer.jsx
 import React from 'react';
-import { Heart, Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Heart, Github, Linkedin, Mail } from 'lucide-react';
 import { personalInfo } from '../../../components/Data/PersonalInfo';
 
 const Footer = () => {
@@ -17,12 +17,6 @@ const Footer = () => {
       name: 'LinkedIn',
       url: personalInfo.social.linkedin,
       icon: Linkedin,
-      color: 'hover:text-blue-400'
-    },
-    {
-      name: 'Twitter',
-      url: personalInfo.social.twitter,
-      icon: Twitter,
       color: 'hover:text-blue-400'
     },
     {

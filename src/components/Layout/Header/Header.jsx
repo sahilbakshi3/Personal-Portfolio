@@ -41,23 +41,22 @@ const Header = () => {
     >
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
-          <div className="text-2xl font-bold">
+          {/* Logo - Left aligned */}
+          <div className="text-3xl font-bold">
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Portfolio
             </span>
           </div>
           
-          {/* Desktop Navigation */}
-          <Navigation 
-            navItems={navItems}
-            activeSection={activeSection}
-            onNavigate={scrollToSection}
-            className="hidden md:flex"
-          />
-
-          {/* Theme Toggle & Mobile Menu Button */}
-          <div className="flex items-center space-x-4">
+          {/* Desktop Navigation & Theme Toggle - Right aligned */}
+          <div className="flex items-center space-x-6">
+            <Navigation 
+              navItems={navItems}
+              activeSection={activeSection}
+              onNavigate={scrollToSection}
+              className="hidden md:flex"
+            />
+            
             <ThemeToggle />
             
             <button

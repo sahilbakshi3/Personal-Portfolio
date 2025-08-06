@@ -9,10 +9,10 @@ const About = () => {
   const [elementRef, isVisible] = useIntersectionObserver();
 
   const stats = [
-    { label: 'Projects Completed', value: '25+', icon: Code },
-    { label: 'Years of Learning', value: '3+', icon: Calendar },
+    { label: 'Projects Completed', value: '10+', icon: Code },
+    { label: 'Years of Learning', value: '2+', icon: Calendar },
     { label: 'Technologies', value: '15+', icon: GraduationCap },
-    { label: 'Happy Clients', value: '10+', icon: Briefcase }
+    { label: 'Happy Clients', value: '2+', icon: Briefcase }
   ];
 
   return (

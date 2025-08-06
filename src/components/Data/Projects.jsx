@@ -21,16 +21,6 @@ export const projects = [
   },
   {
     id: 3,
-    title: 'IoT Monitoring System',
-    description: 'Real-time sensor data monitoring system using Arduino, WebSocket, and React dashboard for industrial applications.',
-    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=250&fit=crop',
-    tags: ['Arduino', 'React', 'WebSocket', 'IoT'],
-    demoUrl: 'https://your-demo-link.com',
-    codeUrl: 'https://github.com/yourusername/iot-monitoring',
-    featured: false,
-  },
-  {
-    id: 4,
     title: 'Task Management App',
     description: 'Collaborative task management application with drag-and-drop functionality, team collaboration, and progress tracking.',
     image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=250&fit=crop',
@@ -40,7 +30,7 @@ export const projects = [
     featured: false,
   },
   {
-    id: 5,
+    id: 4,
     title: 'Portfolio Website',
     description: 'Personal portfolio website built with React, featuring dark mode, smooth animations, and responsive design.',
     image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=400&h=250&fit=crop',
@@ -48,15 +38,5 @@ export const projects = [
     demoUrl: 'https://your-demo-link.com',
     codeUrl: 'https://github.com/yourusername/portfolio',
     featured: false,
-  },
-  {
-    id: 6,
-    title: 'Smart Home Controller',
-    description: 'Home automation system with mobile app interface, voice control integration, and energy monitoring capabilities.',
-    image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=250&fit=crop',
-    tags: ['React Native', 'Arduino', 'Firebase', 'IoT'],
-    demoUrl: 'https://your-demo-link.com',
-    codeUrl: 'https://github.com/yourusername/smart-home',
-    featured: true,
   },
 ];

@@ -1,30 +1,24 @@
 export const personalInfo = {
-  name: 'Your Name',
-  title: 'Full Stack Developer & Electronics Engineer',
-  location: 'Your City, India',
-  email: 'your.email@example.com',
-  phone: '+91 12345 67890',
+  name: 'Sahil Bakshi',
+  title: 'Full Stack Developer',
+  location: 'Indore, India',
+  email: 'sahilbakshi3@gmail.com',
+  phone: '+91-88270-69714',
   
   bio: {
-    short: 'Electronics & Instrumentation Engineering Student passionate about creating innovative web solutions and solving real-world problems through technology.',
-    long: `This is my official portfolio website to showcase my all works related to web-development and UI design. 
-           Currently, I'm a student pursuing engineering in Electronics and Instrumentation. Constantly looking for 
-           opportunities and explore new things. A traveller, a foodie, and a Formula-1 enthusiast. Trying to hone my 
-           skills in coding, my objective is to solve real-world problems to the best of my ability. I am always up for 
-           accepting challenges and learning throughout the journey. I am highly passionate about the field and the 
-           specific responsibilities associated with this position.`
+    short: 'Why did the NaN go to therapy?It just couldn’t figure itself out.',
+    long: `Welcome to my official portfolio website! I'm an aspiring Software Developer currently pursuing a degree in Electronics and Instrumentation Engineering. I’m passionate about building innovative web solutions and creating intuitive, user-friendly UI designs.
+           Beyond academics, I'm an avid traveler, foodie, and Formula 1 enthusiast. I enjoy exploring new technologies, constantly learning, and challenging myself to grow as a developer. My goal is to solve real-world problems through code, continuously refining my skills and embracing new opportunities along the way.
+           I'm always open to exciting challenges and collaborations that push me forward in my journey as a developer.`
   },
 
   social: {
-    github: 'https://github.com/yourusername',
-    linkedin: 'https://linkedin.com/in/yourusername',
-    twitter: 'https://twitter.com/yourusername',
-    instagram: 'https://instagram.com/yourusername',
+    github: 'https://github.com/sahilbakshi3',
+    linkedin: 'https://www.linkedin.com/in/sahil-bakshi3/',
   },
 
   interests: [
     'Web Development',
-    'Electronics & IoT',
     'UI/UX Design',
     'Formula 1',
     'Travel',
@@ -35,25 +29,25 @@ export const personalInfo = {
   education: {
     degree: 'Bachelor of Engineering',
     field: 'Electronics and Instrumentation',
-    institution: 'Your University Name',
-    year: '2021-2025',
-    location: 'Your City, India'
+    institution: 'Shri G.S. Institute of Technology and Science',
+    year: '2020-2024',
+    location: 'Indore, India'
   },
 
   experience: [
     {
       title: 'Frontend Developer Intern',
-      company: 'Tech Company Name',
-      duration: 'Jun 2024 - Aug 2024',
+      company: 'Quantiphi Technologies Solutions Pvt. Ltd.',
+      duration: 'Feb 2024 - Aug 2024',
       description: 'Developed responsive web applications using React and contributed to UI/UX improvements.',
       technologies: ['React', 'JavaScript', 'CSS3', 'Git']
     },
     {
-      title: 'Electronics Project Lead',
-      company: 'University Project',
-      duration: 'Jan 2024 - May 2024',
-      description: 'Led a team to develop an IoT-based monitoring system for industrial applications.',
-      technologies: ['Arduino', 'Sensors', 'C++', 'IoT']
+      title: 'Software Developer',
+      company: 'Quantiphi Technologies Solutions Pvt. Ltd.',
+      duration: 'Aug 2024 - Jun 2025',
+      description: 'Developed and enhanced features in Dociphi, a GenAI-based document processing SaaS platform, contributing to a 3% reduction in operational costs through automation and efficiency improvements.',
+      technologies: ['React', 'JavaScript', 'CSS3', 'Python', 'Git']
     }
   ]
 };

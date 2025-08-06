@@ -21,16 +21,6 @@ export const skills = [
     ]
   },
   {
-    category: 'Electronics & IoT',
-    items: [
-      { name: 'Arduino', level: 85, icon: 'arduino' },
-      { name: 'Raspberry Pi', level: 70, icon: 'raspberry-pi' },
-      { name: 'Circuit Design', level: 75, icon: 'circuit' },
-      { name: 'Sensors & Actuators', level: 80, icon: 'sensor' },
-      { name: 'PCB Design', level: 65, icon: 'pcb' },
-    ]
-  },
-  {
     category: 'Tools & Technologies',
     items: [
       { name: 'Git & GitHub', level: 85, icon: 'git' },

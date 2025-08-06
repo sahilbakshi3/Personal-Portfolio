@@ -15,14 +15,14 @@ const ThemeToggle = () => {
       <div className="relative w-6 h-6">
         <Sun 
           size={20} 
-          className={`absolute inset-0 transition-all duration-300 ${
+          className={`absolute inset-0 text-yellow-500 transition-all duration-300 ${
             isDarkMode ? 'opacity-0 rotate-90' : 'opacity-100 rotate-0'
           }`} 
         />
         <Moon 
           size={20} 
-          className={`absolute inset-0 transition-all duration-300 ${
-            isDarkMode ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-90'
+          className={`absolute inset-0 text-blue-200 transition-all duration-300 ${
+            isDarkMode ? 'opacity-100 rotate-0 drop-shadow-[0_0_8px_rgba(147,197,253,0.5)]' : 'opacity-0 -rotate-90'
           }`} 
         />
       </div>
