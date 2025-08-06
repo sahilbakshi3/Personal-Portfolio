@@ -1,7 +1,8 @@
 // src/components/sections/Contact/ContactForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import Button from '../../common/Button/Button';
+import emailjs from '@emailjs/browser';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -14,17 +15,17 @@ const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
+  const formRef = useRef();
+
   const validateForm = () => {
     const newErrors = {};
 
-    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     } else if (formData.name.trim().length < 2) {
       newErrors.name = 'Name must be at least 2 characters';
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
@@ -32,12 +33,10 @@ const ContactForm = () => {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    // Subject validation
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
     }
 
-    // Message validation
     if (!formData.message.trim()) {
       newErrors.message = 'Message is required';
     } else if (formData.message.trim().length < 10) {
@@ -54,8 +53,7 @@ const ContactForm = () => {
       ...prev,
       [name]: value
     }));
-    
-    // Clear error when user starts typing
+
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -66,29 +64,26 @@ const ContactForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
+
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
-      // Simulate API call - replace with actual form submission logic
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Here you would typically send the form data to your backend
-      console.log('Form submitted:', formData);
-      
+      await emailjs.sendForm(
+        process.env.REACT_APP_EMAILJS_SERVICE_ID,
+        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+      );
+
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
-      
-      // Reset success message after 5 seconds
+
       setTimeout(() => setSubmitStatus(null), 5000);
-      
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error sending email:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -99,15 +94,13 @@ const ContactForm = () => {
     w-full px-4 py-3 rounded-lg border transition-all duration-200 
     ${errors[fieldName] 
       ? 'border-red-500 bg-red-50 dark:bg-red-900/10 focus:ring-red-200' 
-      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-blue-200'
-    }
+      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-blue-200'}
     text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
     focus:ring-2 focus:border-transparent outline-none
   `;
 
   return (
     <div>
-      {/* Success Message */}
       {submitStatus === 'success' && (
         <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center space-x-3">
           <CheckCircle className="text-green-600" size={20} />
@@ -118,7 +111,6 @@ const ContactForm = () => {
         </div>
       )}
 
-      {/* Error Message */}
       {submitStatus === 'error' && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center space-x-3">
           <AlertCircle className="text-red-600" size={20} />
@@ -129,8 +121,7 @@ const ContactForm = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Name Field */}
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Full Name *
@@ -143,13 +134,11 @@ const ContactForm = () => {
             onChange={handleChange}
             className={inputClasses('name')}
             placeholder="Enter your full name"
+            required
           />
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
-          )}
+          {errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>}
         </div>
 
-        {/* Email Field */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Email Address *
@@ -162,13 +151,11 @@ const ContactForm = () => {
             onChange={handleChange}
             className={inputClasses('email')}
             placeholder="Enter your email address"
+            required
           />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>
-          )}
+          {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>}
         </div>
 
-        {/* Subject Field */}
         <div>
           <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Subject *
@@ -181,13 +168,11 @@ const ContactForm = () => {
             onChange={handleChange}
             className={inputClasses('subject')}
             placeholder="What's this about?"
+            required
           />
-          {errors.subject && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.subject}</p>
-          )}
+          {errors.subject && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.subject}</p>}
         </div>
 
-        {/* Message Field */}
         <div>
           <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Message *
@@ -200,16 +185,14 @@ const ContactForm = () => {
             onChange={handleChange}
             className={inputClasses('message')}
             placeholder="Tell me about your project or inquiry..."
+            required
           />
-          {errors.message && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message}</p>
-          )}
+          {errors.message && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message}</p>}
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
             {formData.message.length}/500 characters
           </p>
         </div>
 
-        {/* Submit Button */}
         <Button
           type="submit"
           variant="primary"
@@ -230,7 +213,6 @@ const ContactForm = () => {
           )}
         </Button>
 
-        {/* Form Footer */}
         <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
           By submitting this form, you agree to our privacy policy. 
           Your information will never be shared with third parties.
