@@ -42,25 +42,39 @@ const Header = () => {
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           
-          {/* ✅ Logo - Top left corner with dark mode glow */}
+          {/* ✅ Logo - Top left corner with dark mode optimization */}
           <a 
             href="#home" 
             onClick={(e) => {
               e.preventDefault();
               scrollToSection('home');
             }}
-            className="flex items-center space-x-2 cursor-pointer"
+            className="flex items-center space-x-2 cursor-pointer group"
           >
-            <img 
-              src={logo} 
-              alt="SB Logo" 
-              className={`
-                w-10 h-10 rounded-full object-cover transition-transform duration-200 hover:scale-105
-                ring-0 border-none
-                bg-white dark:bg-gray-900
-                ${isDarkMode ? 'shadow-[0_0_12px_rgba(147,51,234,0.6)]' : 'shadow-sm'}
-              `}
-            />
+            <div className={`
+              logo-container relative w-10 h-10 rounded-full overflow-hidden transition-all duration-200 
+              group-hover:scale-105 group-hover:rotate-3
+              ${isDarkMode 
+                ? 'bg-gradient-to-br from-purple-500/20 to-blue-500/20 ring-2 ring-purple-400/30 shadow-[0_0_20px_rgba(147,51,234,0.3)]' 
+                : 'bg-white ring-2 ring-gray-200/50 shadow-lg'
+              }
+            `}>
+              <img 
+                src={logo} 
+                alt="SB Logo" 
+                className={`
+                  logo-image w-full h-full object-cover transition-all duration-200
+                  ${isDarkMode 
+                    ? 'brightness-125 contrast-110 saturate-110' 
+                    : 'brightness-100'
+                  }
+                `}
+              />
+              {/* Overlay for better visibility in dark mode */}
+              {isDarkMode && (
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-purple-500/10 pointer-events-none" />
+              )}
+            </div>
             <span className="sr-only">Go to Home</span>
           </a>
 

@@ -76,3 +76,24 @@ body {
 .dark p, .dark span, .dark div {
   color: inherit;
 }
+
+/* Logo optimizations for better visibility and performance */
+.logo-container {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.logo-image {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Dark mode logo enhancements */
+.dark .logo-image {
+  filter: drop-shadow(0 0 8px rgba(147, 51, 234, 0.4));
+}
+
+/* Prevent logo from being affected by global dark mode filters */
+.dark .logo-container img {
+  mix-blend-mode: normal;
+}
