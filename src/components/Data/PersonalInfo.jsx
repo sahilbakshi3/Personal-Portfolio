@@ -6,7 +6,7 @@ export const personalInfo = {
   phone: '+91-88270-69714',
   
   bio: {
-    short: 'Why did the NaN go to therapy?It just couldn’t figure itself out.',
+    short: 'Building digital experiences that make a difference, one line of code at a time.',
     long: `Welcome to my official portfolio website! I'm an aspiring Software Developer currently pursuing a degree in Electronics and Instrumentation Engineering. I’m passionate about building innovative web solutions and creating intuitive, user-friendly UI designs.
            Beyond academics, I'm an avid traveler, foodie, and Formula 1 enthusiast. I enjoy exploring new technologies, constantly learning, and challenging myself to grow as a developer. My goal is to solve real-world problems through code, continuously refining my skills and embracing new opportunities along the way.
            I'm always open to exciting challenges and collaborations that push me forward in my journey as a developer.`

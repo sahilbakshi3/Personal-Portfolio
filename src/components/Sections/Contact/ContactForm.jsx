@@ -1,8 +1,9 @@
 // src/components/sections/Contact/ContactForm.jsx
 import React, { useState, useRef } from 'react';
-import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send } from 'lucide-react';
 import Button from '../../common/Button/Button';
 import emailjs from '@emailjs/browser';
+import toast, { Toaster } from 'react-hot-toast';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +14,6 @@ const ContactForm = () => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
 
   const formRef = useRef();
 
@@ -54,6 +54,7 @@ const ContactForm = () => {
       [name]: value
     }));
 
+    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -65,10 +66,12 @@ const ContactForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      toast.error('Please fix the errors in the form');
+      return;
+    }
 
     setIsSubmitting(true);
-    setSubmitStatus(null);
 
     try {
       await emailjs.sendForm(
@@ -78,13 +81,39 @@ const ContactForm = () => {
         process.env.REACT_APP_EMAILJS_PUBLIC_KEY
       );
 
-      setSubmitStatus('success');
+      // Reset form on success
       setFormData({ name: '', email: '', subject: '', message: '' });
+      
+      // Show success toast - sticky
+      toast.success('✅ Message sent successfully! I\'ll get back to you soon.', {
+        id: 'contact-success', // Prevents duplicate toasts
+        style: {
+          background: '#10B981',
+          color: '#fff',
+          fontWeight: '500',
+        },
+        iconTheme: {
+          primary: '#fff',
+          secondary: '#10B981',
+        },
+      });
 
-      setTimeout(() => setSubmitStatus(null), 5000);
     } catch (error) {
       console.error('Error sending email:', error);
-      setSubmitStatus('error');
+      
+      // Show error toast - sticky
+      toast.error('❌ Failed to send message. Please try again or contact me directly.', {
+        id: 'contact-error', // Prevents duplicate toasts
+        style: {
+          background: '#EF4444',
+          color: '#fff',
+          fontWeight: '500',
+        },
+        iconTheme: {
+          primary: '#fff',
+          secondary: '#EF4444',
+        },
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -101,25 +130,43 @@ const ContactForm = () => {
 
   return (
     <div>
-      {submitStatus === 'success' && (
-        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center space-x-3">
-          <CheckCircle className="text-green-600" size={20} />
-          <div>
-            <p className="text-green-800 dark:text-green-300 font-medium">Message sent successfully!</p>
-            <p className="text-green-600 dark:text-green-400 text-sm">I'll get back to you as soon as possible.</p>
-          </div>
-        </div>
-      )}
-
-      {submitStatus === 'error' && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center space-x-3">
-          <AlertCircle className="text-red-600" size={20} />
-          <div>
-            <p className="text-red-800 dark:text-red-300 font-medium">Failed to send message</p>
-            <p className="text-red-600 dark:text-red-400 text-sm">Please try again or contact me directly.</p>
-          </div>
-        </div>
-      )}
+      {/* Toaster for notifications - Always visible, sticky bottom right */}
+      <Toaster 
+        position="bottom-right" 
+        reverseOrder={false}
+        gutter={8}
+        containerStyle={{
+          bottom: 20,
+          right: 20,
+          position: 'fixed',
+          zIndex: 9999,
+        }}
+        toastOptions={{
+          duration: Infinity, // Makes toasts sticky (never auto-dismiss)
+          style: {
+            borderRadius: '12px',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            fontSize: '14px',
+            maxWidth: '400px',
+            minWidth: '300px',
+            padding: '16px',
+          },
+          success: {
+            style: {
+              background: '#F0FDF4',
+              color: '#15803D',
+              border: '1px solid #BBF7D0',
+            },
+          },
+          error: {
+            style: {
+              background: '#FEF2F2',
+              color: '#DC2626',
+              border: '1px solid #FECACA',
+            },
+          },
+        }}
+      />
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
         <div>
