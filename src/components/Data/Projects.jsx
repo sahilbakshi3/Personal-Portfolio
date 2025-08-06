@@ -22,6 +22,7 @@ export const projects = [
     description: 'A wordle game built with React, Tailwind, and Framer Motion.',
     image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=250&fit=crop&crop=center',
     tags: ['React', 'Tailwind', 'Framer Motion'],
+    demoUrl: 'https://wordle-iota-khaki.vercel.app/',
     codeUrl: 'https://github.com/sahilbakshi3/wordle',
   },
   {
