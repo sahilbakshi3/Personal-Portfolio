@@ -2,7 +2,7 @@
 import React from 'react';
 
 const SkillBar = ({ skill, delay = 0, isVisible }) => {
-  const { name, level, icon } = skill;
+  const { name, level, icon, color } = skill;
 
   return (
     <div className="group">
@@ -31,14 +31,18 @@ const SkillBar = ({ skill, delay = 0, isVisible }) => {
       
       <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
+          className="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
           style={{
+            background: color 
+              ? `linear-gradient(90deg, ${color}, ${color}80)` 
+              : 'linear-gradient(to right, #3B82F6, #8B5CF6)',
             width: isVisible ? `${level}%` : '0%',
-            transitionDelay: `${delay}ms`
+            transitionDelay: `${delay}ms`,
+            boxShadow: color ? `0 0 10px ${color}30` : '0 0 10px rgba(59, 130, 246, 0.3)'
           }}
         >
           {/* Animated shine effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
         </div>
       </div>
     </div>
