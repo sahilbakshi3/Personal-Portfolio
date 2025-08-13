@@ -3,7 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import ThemeToggle from '../../common/ThemeToggle/ThemeToggle';
 import Navigation from './Navigation';
-import logo from '../../Assets/Images/my_logo.png'; // ✅ Correct path to your logo
+import logo from '../../Assets/Images/my_logo.png'; 
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -276,19 +276,6 @@ const Skills = () => {
                   </div>
                 ))}
               </div>
-
-              {/* Additional Info */}
-              <div className="mt-16 text-center">
-                <div className="bg-white dark:bg-gray-700 rounded-2xl p-8 shadow-lg">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    Always Learning
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-lg">
-                    Technology evolves rapidly, and I'm constantly updating my skills and exploring new technologies. 
-                    Currently focusing on advanced React patterns, cloud architecture, and IoT integration.
-                  </p>
-                </div>
-              </div>
             </>
           ) : (
             /* 3D Interactive Skills Visualization */
