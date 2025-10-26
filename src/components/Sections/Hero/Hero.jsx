@@ -1,12 +1,7 @@
-// src/components/Sections/Hero/Hero.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
-import Button from '../../common/Button/Button';
-import { personalInfo } from '../../Data/PersonalInfo';
 
-const Hero = () => {
-  const [elementRef, isVisible] = useIntersectionObserver();
+const HeroWithF1Background = () => {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrambling, setIsScrambling] = useState(false);
@@ -20,15 +15,12 @@ const Hero = () => {
     'Problem Solver'
   ];
 
-  // Characters used for scrambling effect
   const scrambleChars = '!@#$%^&*()_+-=[]{}|;:,.<>?~`';
 
-  // Function to get random scramble character
   const getRandomChar = () => {
     return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
   };
 
-  // Scrambled text animation effect
   const animateToText = (targetText) => {
     setIsScrambling(true);
     let iteration = 0;
@@ -43,10 +35,8 @@ const Hero = () => {
       
       for (let i = 0; i < targetText.length; i++) {
         if (iteration > i * 2) {
-          // Gradually reveal the correct character
           scrambledText += targetText[i];
         } else {
-          // Show scrambled character
           scrambledText += getRandomChar();
         }
       }
@@ -59,7 +49,6 @@ const Hero = () => {
         setDisplayText(targetText);
         setIsScrambling(false);
         
-        // Schedule next role change
         timeoutRef.current = setTimeout(() => {
           setCurrentIndex((prev) => (prev + 1) % roles.length);
         }, 2000);
@@ -67,16 +56,13 @@ const Hero = () => {
     }, 80);
   };
 
-  // Main typewriter effect with scrambling
   useEffect(() => {
     const currentRole = roles[currentIndex];
     
-    // Clear any existing timeouts
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
     
-    // Start scrambling animation to new text
     const startDelay = setTimeout(() => {
       animateToText(currentRole);
     }, 100);
@@ -92,8 +78,10 @@ const Hero = () => {
     };
   }, [currentIndex]);
 
-  // Cleanup on unmount
   useEffect(() => {
+    // Set dark mode as default on component mount
+    document.documentElement.classList.add('dark');
+    
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -114,43 +102,52 @@ const Hero = () => {
   return (
     <section 
       id="home" 
-      ref={elementRef}
       className="pt-20 min-h-screen flex items-center justify-center relative overflow-hidden"
     >
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"></div>
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '1s' }}></div>
+      {/* 3D Model Background */}
+      <div className="absolute inset-0 z-0">
+        <iframe 
+          title="Formula 1 RedBull Background" 
+          frameBorder="0" 
+          allowFullScreen 
+          mozallowfullscreen="true" 
+          webkitallowfullscreen="true" 
+          allow="autoplay; fullscreen; xr-spatial-tracking" 
+          xr-spatial-tracking="true" 
+          execution-while-out-of-viewport="true" 
+          execution-while-not-rendered="true" 
+          web-share="true" 
+          src="https://sketchfab.com/models/d0a2cfaecfc341d69aa44005f0624f94/embed?ui_theme=dark&autostart=1&preload=1&ui_infos=0&ui_controls=0&ui_watermark=0&ui_hint=0&ui_settings=0&ui_help=0&transparent=1&camera=0"
+          className="w-full h-full opacity-35 dark:opacity-40"
+          style={{ pointerEvents: 'none' }}
+        />
+        {/* Gradient overlays for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/70 to-white/85 dark:from-gray-900/60 dark:via-gray-900/40 dark:to-gray-900/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50/60 via-transparent to-purple-50/60 dark:from-blue-900/10 dark:via-transparent dark:to-purple-900/10"></div>
+      </div>
+
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 dark:bg-blue-500/30 rounded-full opacity-20 animate-pulse blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200 dark:bg-purple-500/30 rounded-full opacity-20 animate-pulse blur-3xl" style={{ animationDelay: '1s' }}></div>
       </div>
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <div 
-          className={`transition-all duration-1000 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
-          {/* Greeting */}
-          {/* <div className="mb-6">
-            <span className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium mb-4">
-              👋 Welcome to my portfolio
-            </span>
-          </div> */}
-
+        <div className="backdrop-blur-sm bg-white/30 dark:bg-gray-900/30 rounded-3xl p-8 md:p-12">
           {/* Main Heading */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className="block text-gray-900 dark:text-white mb-2">
+            <span className="block text-gray-900 dark:text-white mb-2 drop-shadow-lg">
               Hi, I'm
             </span>
-            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              {personalInfo.name}
+            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent drop-shadow-2xl">
+              Sahil Bakshi
             </span>
           </h1>
 
           {/* Animated Role with Scrambling Effect */}
           <div className="h-16 mb-8">
-            <p className="text-xl md:text-3xl text-gray-600 dark:text-gray-300">
+            <p className="text-xl md:text-3xl text-gray-700 dark:text-gray-200 drop-shadow-md">
               I'm a{' '}
               <span className="font-mono font-semibold relative">
                 {displayText.split('').map((char, index) => (
@@ -159,8 +156,8 @@ const Hero = () => {
                     className={`
                       inline-block transition-all duration-100
                       ${isScrambling && Math.random() > 0.7 
-                        ? 'text-blue-600 animate-pulse transform scale-110' 
-                        : 'text-blue-600'
+                        ? 'text-blue-600 dark:text-blue-400 animate-pulse transform scale-110' 
+                        : 'text-blue-600 dark:text-blue-400'
                       }
                     `}
                     style={{
@@ -179,63 +176,35 @@ const Hero = () => {
           </div>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
-            {personalInfo.bio.short}
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+            Building digital experiences that make a difference, one line of code at a time.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button
+            <button
               onClick={() => scrollToSection('projects')}
-              variant="primary"
-              size="lg"
-              className="transform hover:scale-105 transition-all duration-300"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-medium shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300"
             >
               View My Work
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => scrollToSection('contact')}
-              variant="outline"
-              size="lg"
-              className="transform hover:scale-105 transition-all duration-300"
+              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-blue-600 dark:text-blue-400 px-8 py-4 rounded-full font-medium hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
             >
               Get In Touch
-            </Button>
+            </button>
           </div>
+          
         </div>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <ChevronDown size={32} className="text-gray-400" />
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
+        <ChevronDown size={32} className="text-gray-600 dark:text-gray-400 drop-shadow-lg" />
       </div>
-
-      <style jsx>{`
-        @keyframes glitch-effect {
-          0%, 100% { 
-            transform: translate(0); 
-            filter: hue-rotate(0deg);
-          }
-          20% { 
-            transform: translate(-1px, 1px); 
-            filter: hue-rotate(90deg);
-          }
-          40% { 
-            transform: translate(-1px, -1px); 
-            filter: hue-rotate(180deg);
-          }
-          60% { 
-            transform: translate(1px, 1px); 
-            filter: hue-rotate(270deg);
-          }
-          80% { 
-            transform: translate(1px, -1px); 
-            filter: hue-rotate(360deg);
-          }
-        }
-      `}</style>
     </section>
   );
 };
 
-export default Hero;
+export default HeroWithF1Background;
