@@ -1,8 +1,8 @@
 export const projects = [
   {
     id: 1,
-    title: 'Juspay Dashboard',
-    description: 'A dashboard for Juspay to manage their customers and transactions.',
+    title: 'Analytics Dashboard',
+    description: 'A dashboard to manage customers and transactions.',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop&crop=center',
     tags: ['React', 'Node.js', 'MongoDB', 'Express', 'Stripe', 'Tailwind', 'Framer Motion'],
     demoUrl: 'https://juspay-dashboard-two.vercel.app/',
