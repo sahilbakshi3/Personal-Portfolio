@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-const HeroWithF1Background = () => {
+const Hero = () => {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrambling, setIsScrambling] = useState(false);
@@ -79,9 +79,6 @@ const HeroWithF1Background = () => {
   }, [currentIndex]);
 
   useEffect(() => {
-    // Set dark mode as default on component mount
-    document.documentElement.classList.add('dark');
-    
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -102,52 +99,35 @@ const HeroWithF1Background = () => {
   return (
     <section 
       id="home" 
-      className="pt-20 min-h-screen flex items-center justify-center relative overflow-hidden"
+      className="pt-20 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950"
     >
-      {/* 3D Model Background */}
+      {/* Animated Background Elements */}
       <div className="absolute inset-0 z-0">
-        <iframe 
-          title="Formula 1 RedBull Background" 
-          frameBorder="0" 
-          allowFullScreen 
-          mozallowfullscreen="true" 
-          webkitallowfullscreen="true" 
-          allow="autoplay; fullscreen; xr-spatial-tracking" 
-          xr-spatial-tracking="true" 
-          execution-while-out-of-viewport="true" 
-          execution-while-not-rendered="true" 
-          web-share="true" 
-          src="https://sketchfab.com/models/d0a2cfaecfc341d69aa44005f0624f94/embed?ui_theme=dark&autostart=1&preload=1&ui_infos=0&ui_controls=0&ui_watermark=0&ui_hint=0&ui_settings=0&ui_help=0&transparent=1&camera=0"
-          className="w-full h-full opacity-35 dark:opacity-40"
-          style={{ pointerEvents: 'none' }}
-        />
-        {/* Gradient overlays for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/70 to-white/85 dark:from-gray-900/60 dark:via-gray-900/40 dark:to-gray-900/60"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50/60 via-transparent to-purple-50/60 dark:from-blue-900/10 dark:via-transparent dark:to-purple-900/10"></div>
-      </div>
-
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 dark:bg-blue-500/30 rounded-full opacity-20 animate-pulse blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200 dark:bg-purple-500/30 rounded-full opacity-20 animate-pulse blur-3xl" style={{ animationDelay: '1s' }}></div>
+        {/* Gradient Orbs */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700 rounded-full opacity-20 dark:opacity-30 animate-pulse blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-600 dark:from-purple-500 dark:to-pink-700 rounded-full opacity-20 dark:opacity-30 animate-pulse blur-3xl" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-indigo-400 to-purple-600 dark:from-indigo-500 dark:to-purple-700 rounded-full opacity-10 dark:opacity-20 animate-pulse blur-3xl" style={{ animationDelay: '2s' }}></div>
+        
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-10"></div>
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <div className="backdrop-blur-sm bg-white/30 dark:bg-gray-900/30 rounded-3xl p-8 md:p-12">
+      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+        <div className="p-8 md:p-12">
           {/* Main Heading */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className="block text-gray-900 dark:text-white mb-2 drop-shadow-lg">
+            <span className="block text-gray-900 dark:text-white mb-2">
               Hi, I'm
             </span>
-            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent drop-shadow-2xl">
+            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
               Sahil Bakshi
             </span>
           </h1>
 
           {/* Animated Role with Scrambling Effect */}
           <div className="h-16 mb-8">
-            <p className="text-xl md:text-3xl text-gray-700 dark:text-gray-200 drop-shadow-md">
+            <p className="text-xl md:text-3xl text-gray-700 dark:text-gray-200">
               I'm a{' '}
               <span className="font-mono font-semibold relative">
                 {displayText.split('').map((char, index) => (
@@ -176,7 +156,7 @@ const HeroWithF1Background = () => {
           </div>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
             Building digital experiences that make a difference, one line of code at a time.
           </p>
 
@@ -184,27 +164,41 @@ const HeroWithF1Background = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={() => scrollToSection('projects')}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-medium shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               View My Work
             </button>
             <button
               onClick={() => scrollToSection('contact')}
-              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-blue-600 dark:text-blue-400 px-8 py-4 rounded-full font-medium hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+              className="bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 px-8 py-4 rounded-full font-medium border-2 border-blue-600 dark:border-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               Get In Touch
             </button>
           </div>
-          
         </div>
       </div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
-        <ChevronDown size={32} className="text-gray-600 dark:text-gray-400 drop-shadow-lg" />
+        <ChevronDown size={32} className="text-gray-600 dark:text-gray-400" />
       </div>
+
+      <style jsx>{`
+        .bg-grid-pattern {
+          background-image: 
+            linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+          background-size: 40px 40px;
+        }
+        
+        .dark .bg-grid-pattern {
+          background-image: 
+            linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        }
+      `}</style>
     </section>
   );
 };
 
-export default HeroWithF1Background;
+export default Hero;
