@@ -21,7 +21,7 @@ function AppContent() {
         <About />
         <Skills />
         <Projects />
-        <Contact />
+        {/* <Contact /> */}
       </main>
       <Footer />
     </div>

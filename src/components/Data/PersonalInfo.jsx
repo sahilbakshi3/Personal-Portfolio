@@ -3,7 +3,7 @@ export const personalInfo = {
   title: 'Full Stack Developer',
   location: 'Indore, India',
   email: 'sahilbakshi3@gmail.com',
-  phone: '+91-88270-69714',
+  // phone: '+91-88270-69714',
   
   bio: {
     short: 'Building digital experiences that make a difference, one line of code at a time.',

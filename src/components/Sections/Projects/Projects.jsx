@@ -103,7 +103,7 @@ const Projects = () => {
           )}
 
           {/* Call to Action */}
-          <div className="mt-20 text-center">
+          {/* <div className="mt-20 text-center">
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 Have a Project in Mind?
@@ -124,7 +124,7 @@ const Projects = () => {
                 Let's Work Together
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

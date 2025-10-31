@@ -11,7 +11,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { isDarkMode } = useTheme();
 
-  const navItems = ['home', 'about', 'skills', 'projects', 'contact'];
+  const navItems = ['home', 'about', 'skills', 'projects'];
 
   useEffect(() => {
     const handleScroll = () => {

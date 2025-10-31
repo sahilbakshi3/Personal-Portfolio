@@ -17,13 +17,6 @@ const Contact = () => {
       color: 'text-blue-600'
     },
     {
-      icon: Phone,
-      label: 'Phone',
-      value: personalInfo.phone,
-      href: `tel:${personalInfo.phone}`,
-      color: 'text-green-600'
-    },
-    {
       icon: MapPin,
       label: 'Location',
       value: personalInfo.location,
@@ -143,7 +136,7 @@ const Contact = () => {
               </div>
 
               {/* Availability Status */}
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
+              {/* <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-green-800 dark:text-green-300 font-medium">
@@ -153,7 +146,7 @@ const Contact = () => {
                 <p className="text-green-600 dark:text-green-400 text-sm mt-2">
                   Currently accepting freelance work and full-time opportunities
                 </p>
-              </div>
+              </div> */}
             </div>
 
             {/* Contact Form */}
@@ -169,7 +162,7 @@ const Contact = () => {
           </div>
 
           {/* Additional Info */}
-          <div className="mt-16 text-center">
+          {/* <div className="mt-16 text-center">
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 rounded-2xl p-8">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 Quick Response Guarantee
@@ -179,7 +172,7 @@ const Contact = () => {
                 For urgent matters, feel free to call or text me directly.
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
