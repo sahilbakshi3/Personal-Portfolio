@@ -5,8 +5,11 @@ const Hero = () => {
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrambling, setIsScrambling] = useState(false);
+  const canvasRef = useRef(null);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
+  const animationRef = useRef(null);
   
   const roles = [
     'Web Developer',
@@ -78,6 +81,194 @@ const Hero = () => {
     };
   }, [currentIndex]);
 
+  // Detect system dark mode preference
+  useEffect(() => {
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDarkMode(darkModeMediaQuery.matches);
+
+    const handleChange = (e) => {
+      setIsDarkMode(e.matches);
+    };
+
+    darkModeMediaQuery.addEventListener('change', handleChange);
+    return () => darkModeMediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  // Black hole canvas animation with lines
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let time = 0;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() {
+        this.reset();
+        this.trail = [];
+        this.maxTrailLength = 30;
+      }
+
+      reset() {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * Math.max(canvas.width, canvas.height);
+        this.x = canvas.width / 2 + Math.cos(angle) * distance;
+        this.y = canvas.height / 2 + Math.sin(angle) * distance;
+        this.speed = Math.random() * 0.5 + 0.2;
+        this.hue = Math.random() * 60 + 200; // Blue to purple range
+        this.opacity = Math.random() * 0.5 + 0.3;
+        this.spiralOffset = Math.random() * Math.PI * 2;
+        this.trail = [];
+      }
+
+      update() {
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        // Store current position in trail
+        this.trail.push({ x: this.x, y: this.y });
+        if (this.trail.length > this.maxTrailLength) {
+          this.trail.shift();
+        }
+        
+        const dx = centerX - this.x;
+        const dy = centerY - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx);
+        
+        // Spiral effect
+        const spiralAngle = angle + (1 / (distance + 50)) * 10 + this.spiralOffset;
+        
+        this.x += Math.cos(spiralAngle) * this.speed * (distance / 100);
+        this.y += Math.sin(spiralAngle) * this.speed * (distance / 100);
+        
+        // Increase speed as it gets closer
+        this.speed += 0.02;
+        
+        // Reset if too close to center
+        if (distance < 30) {
+          this.reset();
+        }
+
+        // Fade as approaching center
+        if (distance < 200) {
+          this.opacity = (distance / 200) * 0.8;
+        }
+      }
+
+      draw() {
+        if (this.trail.length < 2) return;
+        
+        ctx.beginPath();
+        ctx.moveTo(this.trail[0].x, this.trail[0].y);
+        
+        for (let i = 1; i < this.trail.length; i++) {
+          ctx.lineTo(this.trail[i].x, this.trail[i].y);
+        }
+        
+        // Calculate opacity gradient along the line
+        const gradient = ctx.createLinearGradient(
+          this.trail[0].x, 
+          this.trail[0].y, 
+          this.x, 
+          this.y
+        );
+        
+        gradient.addColorStop(0, `hsla(${this.hue}, 80%, 60%, 0)`);
+        gradient.addColorStop(0.5, `hsla(${this.hue}, 80%, 60%, ${this.opacity * 0.5})`);
+        gradient.addColorStop(1, `hsla(${this.hue}, 80%, 60%, ${this.opacity})`);
+        
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = `hsla(${this.hue}, 80%, 60%, ${this.opacity})`;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    // Create particles
+    for (let i = 0; i < 150; i++) {
+      particles.push(new Particle());
+    }
+
+    const animate = () => {
+      // Fade effect based on mode
+      if (isDarkMode) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      } else {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      }
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw black hole center
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      
+      // Outer glow
+      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 150);
+      
+      if (isDarkMode) {
+        gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+        gradient.addColorStop(0.3, 'rgba(30, 20, 60, 0.8)');
+        gradient.addColorStop(0.6, 'rgba(60, 40, 120, 0.3)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      } else {
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        gradient.addColorStop(0.3, 'rgba(220, 210, 255, 0.8)');
+        gradient.addColorStop(0.6, 'rgba(180, 160, 240, 0.3)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      }
+      
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 150, 0, Math.PI * 2);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // Event horizon
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 30, 0, Math.PI * 2);
+      ctx.fillStyle = isDarkMode ? '#000' : '#fff';
+      ctx.fill();
+
+      // Accretion disk ring
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 35 + Math.sin(time * 0.05) * 3, 0, Math.PI * 2);
+      ctx.strokeStyle = isDarkMode 
+        ? `rgba(100, 50, 200, ${0.5 + Math.sin(time * 0.1) * 0.3})`
+        : `rgba(120, 80, 220, ${0.5 + Math.sin(time * 0.1) * 0.3})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+
+      time++;
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isDarkMode]);
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
@@ -99,35 +290,35 @@ const Hero = () => {
   return (
     <section 
       id="home" 
-      className="pt-20 min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950"
+      className="pt-20 min-h-screen flex items-center justify-center relative overflow-hidden"
     >
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 z-0">
-        {/* Gradient Orbs */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700 rounded-full opacity-20 dark:opacity-30 animate-pulse blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-purple-400 to-pink-600 dark:from-purple-500 dark:to-pink-700 rounded-full opacity-20 dark:opacity-30 animate-pulse blur-3xl" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-indigo-400 to-purple-600 dark:from-indigo-500 dark:to-purple-700 rounded-full opacity-10 dark:opacity-20 animate-pulse blur-3xl" style={{ animationDelay: '2s' }}></div>
-        
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-10"></div>
-      </div>
+      {/* Black Hole Canvas Background */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ background: isDarkMode ? '#000' : '#fff' }}
+      />
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <div className="p-8 md:p-12">
           {/* Main Heading */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className="block text-gray-900 dark:text-white mb-2">
+            <span className={`block mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
               Hi, I'm
             </span>
-            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+            <span className={`block bg-gradient-to-r ${
+              isDarkMode 
+                ? 'from-blue-400 via-purple-400 to-indigo-400' 
+                : 'from-blue-600 via-purple-600 to-indigo-600'
+            } bg-clip-text text-transparent`}>
               Sahil Bakshi
             </span>
           </h1>
 
           {/* Animated Role with Scrambling Effect */}
           <div className="h-16 mb-8">
-            <p className="text-xl md:text-3xl text-gray-700 dark:text-gray-200">
+            <p className={`text-xl md:text-3xl ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
               I'm a{' '}
               <span className="font-mono font-semibold relative">
                 {displayText.split('').map((char, index) => (
@@ -136,8 +327,8 @@ const Hero = () => {
                     className={`
                       inline-block transition-all duration-100
                       ${isScrambling && Math.random() > 0.7 
-                        ? 'text-blue-600 dark:text-blue-400 animate-pulse transform scale-110' 
-                        : 'text-blue-600 dark:text-blue-400'
+                        ? `${isDarkMode ? 'text-blue-400' : 'text-blue-600'} animate-pulse transform scale-110` 
+                        : isDarkMode ? 'text-blue-400' : 'text-blue-600'
                       }
                     `}
                     style={{
@@ -150,13 +341,15 @@ const Hero = () => {
                     {char === ' ' ? '\u00A0' : char}
                   </span>
                 ))}
-                <span className="animate-pulse text-blue-400 ml-1">|</span>
+                <span className={`animate-pulse ml-1 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>|</span>
               </span>
             </p>
           </div>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className={`text-lg md:text-xl mb-10 max-w-3xl mx-auto leading-relaxed ${
+            isDarkMode ? 'text-gray-300' : 'text-gray-700'
+          }`}>
             Building digital experiences that make a difference, one line of code at a time.
           </p>
 
@@ -168,35 +361,14 @@ const Hero = () => {
             >
               View My Work
             </button>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 px-8 py-4 rounded-full font-medium border-2 border-blue-600 dark:border-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-            >
-              Get In Touch
-            </button>
           </div>
         </div>
       </div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
-        <ChevronDown size={32} className="text-gray-600 dark:text-gray-400" />
+        <ChevronDown size={32} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
       </div>
-
-      <style jsx>{`
-        .bg-grid-pattern {
-          background-image: 
-            linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-        
-        .dark .bg-grid-pattern {
-          background-image: 
-            linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-        }
-      `}</style>
     </section>
   );
 };
