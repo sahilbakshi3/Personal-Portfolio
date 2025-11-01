@@ -56,7 +56,7 @@ const Header = () => {
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled 
           ? `${isDarkMode 
-              ? 'bg-gray-900/95 border-b border-gray-800/50' 
+              ? 'bg-black/95 border-b border-gray-800/50' 
               : 'bg-white/95 border-b border-gray-200/50'
             } backdrop-blur-md shadow-lg` 
           : 'bg-transparent'
@@ -172,7 +172,7 @@ const Header = () => {
           <div className={`
             py-4 border-t
             ${isDarkMode 
-              ? 'border-gray-800 bg-gray-900/95' 
+              ? 'border-gray-800 bg-black/95' 
               : 'border-gray-200 bg-white/95'
             }
           `}>

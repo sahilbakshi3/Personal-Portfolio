@@ -19,7 +19,7 @@ const ProjectCard = ({ project, index, isVisible }) => {
 
   return (
     <div
-      className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:scale-105 ${
+      className={`group bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:scale-105 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}
       style={{ transitionDelay: `${index * 150}ms` }}
@@ -35,7 +35,7 @@ const ProjectCard = ({ project, index, isVisible }) => {
       )}
 
       {/* Image Container */}
-      <div className="relative h-48 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+      <div className="relative h-48 bg-gray-200 dark:bg-gray-800 overflow-hidden">
         {!imageLoaded && !imageError && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -53,7 +53,7 @@ const ProjectCard = ({ project, index, isVisible }) => {
             onError={handleImageError}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-600 dark:to-gray-700">
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-700 dark:to-gray-800">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-2">
                 <Eye size={24} className="text-white" />
@@ -130,7 +130,7 @@ const ProjectCard = ({ project, index, isVisible }) => {
               href={codeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center space-x-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
+              className="flex-1 flex items-center justify-center space-x-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm font-medium"
             >
               <Github size={16} />
               <span>Code</span>

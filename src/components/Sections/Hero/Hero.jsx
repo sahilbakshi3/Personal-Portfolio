@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { useTheme } from '../../../context/ThemeContext';
 
 const Hero = () => {
+  const { isDarkMode } = useTheme();
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrambling, setIsScrambling] = useState(false);
   const canvasRef = useRef(null);
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
   const animationRef = useRef(null);
@@ -81,23 +82,17 @@ const Hero = () => {
     };
   }, [currentIndex]);
 
-  // Detect system dark mode preference
-  useEffect(() => {
-    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDarkMode(darkModeMediaQuery.matches);
-
-    const handleChange = (e) => {
-      setIsDarkMode(e.matches);
-    };
-
-    darkModeMediaQuery.addEventListener('change', handleChange);
-    return () => darkModeMediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
-  // Black hole canvas animation with lines
+  // Black hole canvas animation - ONLY IN DARK MODE
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !isDarkMode) {
+      // Clear canvas and stop animation if not in dark mode
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -124,8 +119,8 @@ const Hero = () => {
         this.x = canvas.width / 2 + Math.cos(angle) * distance;
         this.y = canvas.height / 2 + Math.sin(angle) * distance;
         this.speed = Math.random() * 0.5 + 0.2;
-        this.hue = Math.random() * 60 + 200; // Blue to purple range
-        this.opacity = Math.random() * 0.5 + 0.3;
+        this.hue = Math.random() * 180 + 180; // Extended range for neon colors (cyan to magenta)
+        this.opacity = Math.random() * 0.5 + 0.5;
         this.spiralOffset = Math.random() * Math.PI * 2;
         this.trail = [];
       }
@@ -175,7 +170,7 @@ const Hero = () => {
           ctx.lineTo(this.trail[i].x, this.trail[i].y);
         }
         
-        // Calculate opacity gradient along the line
+        // Create neon gradient along the line
         const gradient = ctx.createLinearGradient(
           this.trail[0].x, 
           this.trail[0].y, 
@@ -183,16 +178,30 @@ const Hero = () => {
           this.y
         );
         
-        gradient.addColorStop(0, `hsla(${this.hue}, 80%, 60%, 0)`);
-        gradient.addColorStop(0.5, `hsla(${this.hue}, 80%, 60%, ${this.opacity * 0.5})`);
-        gradient.addColorStop(1, `hsla(${this.hue}, 80%, 60%, ${this.opacity})`);
+        // Neon gradient with vibrant colors
+        const hue1 = this.hue;
+        const hue2 = (this.hue + 60) % 360; // Shift hue for gradient effect
+        const hue3 = (this.hue + 120) % 360;
+        
+        gradient.addColorStop(0, `hsla(${hue1}, 100%, 50%, 0)`);
+        gradient.addColorStop(0.3, `hsla(${hue2}, 100%, 60%, ${this.opacity * 0.6})`);
+        gradient.addColorStop(0.7, `hsla(${hue3}, 100%, 70%, ${this.opacity * 0.8})`);
+        gradient.addColorStop(1, `hsla(${this.hue}, 100%, 80%, ${this.opacity})`);
         
         ctx.strokeStyle = gradient;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.5;
         ctx.lineCap = 'round';
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = `hsla(${this.hue}, 80%, 60%, ${this.opacity})`;
+        
+        // Enhanced glow effect for neon look
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = `hsla(${this.hue}, 100%, 60%, ${this.opacity})`;
         ctx.stroke();
+        
+        // Add extra glow layer
+        ctx.shadowBlur = 10;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        
         ctx.shadowBlur = 0;
       }
     }
@@ -203,12 +212,8 @@ const Hero = () => {
     }
 
     const animate = () => {
-      // Fade effect based on mode
-      if (isDarkMode) {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-      } else {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-      }
+      // Fade effect
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Draw black hole center
@@ -217,18 +222,10 @@ const Hero = () => {
       
       // Outer glow
       const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 150);
-      
-      if (isDarkMode) {
-        gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
-        gradient.addColorStop(0.3, 'rgba(30, 20, 60, 0.8)');
-        gradient.addColorStop(0.6, 'rgba(60, 40, 120, 0.3)');
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      } else {
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(0.3, 'rgba(220, 210, 255, 0.8)');
-        gradient.addColorStop(0.6, 'rgba(180, 160, 240, 0.3)');
-        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      }
+      gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+      gradient.addColorStop(0.3, 'rgba(30, 20, 60, 0.8)');
+      gradient.addColorStop(0.6, 'rgba(60, 40, 120, 0.3)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
       
       ctx.beginPath();
       ctx.arc(centerX, centerY, 150, 0, Math.PI * 2);
@@ -238,15 +235,13 @@ const Hero = () => {
       // Event horizon
       ctx.beginPath();
       ctx.arc(centerX, centerY, 30, 0, Math.PI * 2);
-      ctx.fillStyle = isDarkMode ? '#000' : '#fff';
+      ctx.fillStyle = '#000';
       ctx.fill();
 
       // Accretion disk ring
       ctx.beginPath();
       ctx.arc(centerX, centerY, 35 + Math.sin(time * 0.05) * 3, 0, Math.PI * 2);
-      ctx.strokeStyle = isDarkMode 
-        ? `rgba(100, 50, 200, ${0.5 + Math.sin(time * 0.1) * 0.3})`
-        : `rgba(120, 80, 220, ${0.5 + Math.sin(time * 0.1) * 0.3})`;
+      ctx.strokeStyle = `rgba(100, 50, 200, ${0.5 + Math.sin(time * 0.1) * 0.3})`;
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -290,14 +285,18 @@ const Hero = () => {
   return (
     <section 
       id="home" 
-      className="pt-20 min-h-screen flex items-center justify-center relative overflow-hidden"
+      className={`pt-20 min-h-screen flex items-center justify-center relative overflow-hidden ${
+        isDarkMode ? 'bg-black' : 'bg-white'
+      }`}
     >
-      {/* Black Hole Canvas Background */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ background: isDarkMode ? '#000' : '#fff' }}
-      />
+      {/* Black Hole Canvas Background - Only visible in dark mode */}
+      {isDarkMode && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full"
+          style={{ background: '#000' }}
+        />
+      )}
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">

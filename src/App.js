@@ -13,7 +13,7 @@ function AppContent() {
   
   return (
     <div className={`App min-h-screen transition-colors duration-300 ${
-      isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
+      isDarkMode ? 'bg-black text-white' : 'bg-white text-gray-900'
     }`}>
       
       <Header />

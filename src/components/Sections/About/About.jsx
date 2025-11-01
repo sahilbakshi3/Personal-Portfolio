@@ -16,7 +16,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 px-4 bg-white dark:bg-gray-900">
+    <section id="about" className="py-20 px-4 bg-white dark:bg-black">
       <div className="max-w-6xl mx-auto">
         <div 
           ref={elementRef}
@@ -70,7 +70,7 @@ const About = () => {
                   return (
                     <div 
                       key={stat.label}
-                      className={`bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl text-center transform hover:scale-105 transition-all duration-300 group ${
+                      className={`bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl text-center transform hover:scale-105 transition-all duration-300 group ${
                         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                       }`}
                       style={{ transitionDelay: `${index * 100}ms` }}
@@ -100,7 +100,7 @@ const About = () => {
               </div>
 
               {/* Education */}
-              <div className="bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 p-6 rounded-xl hover:shadow-md transition-shadow duration-300">
+              <div className="bg-gray-50 dark:bg-gray-900 border dark:border-gray-800 p-6 rounded-xl hover:shadow-md transition-shadow duration-300">
                 <div className="flex items-center space-x-3 mb-3">
                   <GraduationCap className="text-blue-600 dark:text-blue-400" size={24} />
                   <h4 className="text-xl font-semibold text-gray-900 dark:text-white">Education</h4>
@@ -155,7 +155,7 @@ const About = () => {
                         {exp.technologies.map((tech, techIndex) => (
                           <span
                             key={techIndex}
-                            className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border dark:border-gray-600 rounded text-xs hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-300"
+                            className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border dark:border-gray-700 rounded text-xs hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
                           >
                             {tech}
                           </span>

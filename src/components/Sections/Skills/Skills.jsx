@@ -8,7 +8,7 @@ const Skills = () => {
   const [elementRef, isVisible] = useIntersectionObserver();
 
   return (
-    <section id="skills" className="py-12 px-4 bg-gray-50 dark:bg-gray-900 relative">      
+    <section id="skills" className="py-12 px-4 bg-gray-50 dark:bg-black relative">      
       <div className="max-w-6xl mx-auto relative z-10">
         <div 
           ref={elementRef}

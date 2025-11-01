@@ -43,7 +43,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-gray-900 dark:bg-black text-white py-12 border-t border-gray-800">
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -103,12 +103,14 @@ const Footer = () => {
               >
                 {personalInfo.email}
               </a>
-              <a
-                href={`tel:${personalInfo.phone}`}
-                className="hover:text-white transition-colors block"
-              >
-                {personalInfo.phone}
-              </a>
+              {personalInfo.phone && (
+                <a
+                  href={`tel:${personalInfo.phone}`}
+                  className="hover:text-white transition-colors block"
+                >
+                  {personalInfo.phone}
+                </a>
+              )}
             </div>
           </div>
         </div>

@@ -8,9 +8,9 @@ const SkillCard = ({ skill, delay = 0, isVisible }) => {
   return (
     <div 
       className={`
-        group relative bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm hover:shadow-lg 
+        group relative bg-white dark:bg-gray-900 rounded-lg p-3 shadow-sm hover:shadow-lg 
         transition-all duration-300 ease-out transform hover:-translate-y-1 hover:scale-102
-        border border-gray-200 dark:border-gray-700 overflow-hidden
+        border border-gray-200 dark:border-gray-800 overflow-hidden
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
       `}
       style={{ 

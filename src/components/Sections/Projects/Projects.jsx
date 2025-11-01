@@ -25,7 +25,7 @@ const Projects = () => {
   };
 
   return (
-    <section id="projects" className="py-20 px-4">
+    <section id="projects" className="py-20 px-4 bg-white dark:bg-black">
       <div className="max-w-7xl mx-auto">
         <div 
           ref={elementRef}
@@ -54,7 +54,7 @@ const Projects = () => {
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                     filter === category
                       ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                   }`}
                 >
                   {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -92,7 +92,7 @@ const Projects = () => {
           {/* Empty State */}
           {filteredProjects.length === 0 && (
             <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -101,30 +101,6 @@ const Projects = () => {
               <p className="text-gray-600 dark:text-gray-400">Try selecting a different category</p>
             </div>
           )}
-
-          {/* Call to Action */}
-          {/* <div className="mt-20 text-center">
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                Have a Project in Mind?
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 text-lg mb-6">
-                I'm always interested in working on new and exciting projects. Let's discuss how we can bring your ideas to life!
-              </p>
-              <Button
-                onClick={() => {
-                  const element = document.getElementById('contact');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                variant="primary"
-                size="lg"
-              >
-                Let's Work Together
-              </Button>
-            </div>
-          </div> */}
         </div>
       </div>
     </section>
