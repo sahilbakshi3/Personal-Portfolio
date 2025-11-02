@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 
 const Hero = () => {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode } = useTheme(); // Get theme from context
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrambling, setIsScrambling] = useState(false);
@@ -11,21 +11,22 @@ const Hero = () => {
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
   const animationRef = useRef(null);
+  const particlesRef = useRef([]);
   
-  const roles = [
+  const roles = useMemo(() => [
     'Web Developer',
     'UI/UX Designer', 
     'Electronics Engineer',
     'Problem Solver'
-  ];
+  ], []);
 
   const scrambleChars = '!@#$%^&*()_+-=[]{}|;:,.<>?~`';
 
-  const getRandomChar = () => {
+  const getRandomChar = useCallback(() => {
     return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-  };
+  }, [scrambleChars]);
 
-  const animateToText = (targetText) => {
+  const animateToText = useCallback((targetText) => {
     setIsScrambling(true);
     let iteration = 0;
     const maxIterations = 30;
@@ -35,15 +36,9 @@ const Hero = () => {
     }
     
     intervalRef.current = setInterval(() => {
-      let scrambledText = '';
-      
-      for (let i = 0; i < targetText.length; i++) {
-        if (iteration > i * 2) {
-          scrambledText += targetText[i];
-        } else {
-          scrambledText += getRandomChar();
-        }
-      }
+      const scrambledText = Array.from(targetText, (char, i) => 
+        iteration > i * 2 ? char : getRandomChar()
+      ).join('');
       
       setDisplayText(scrambledText);
       iteration++;
@@ -58,7 +53,7 @@ const Hero = () => {
         }, 2000);
       }
     }, 80);
-  };
+  }, [getRandomChar, roles.length]);
 
   useEffect(() => {
     const currentRole = roles[currentIndex];
@@ -80,56 +75,75 @@ const Hero = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [currentIndex]);
+  }, [currentIndex, roles, animateToText]);
 
   // Black hole canvas animation - ONLY IN DARK MODE
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !isDarkMode) {
-      // Clear canvas and stop animation if not in dark mode
-      if (canvas) {
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
+    
+    // Clear and exit if not in dark mode or no canvas
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d', { 
+      alpha: false,
+      desynchronized: true
+    });
+
+    if (!isDarkMode) {
+      // Clear canvas in light mode
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       return;
     }
 
-    const ctx = canvas.getContext('2d');
-    let particles = [];
     let time = 0;
+    let frameCount = 0;
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(resizeCanvas, 250);
+    };
+    window.addEventListener('resize', handleResize);
 
     class Particle {
       constructor() {
         this.reset();
         this.trail = [];
-        this.maxTrailLength = 30;
+        this.maxTrailLength = 20;
       }
 
       reset() {
         const angle = Math.random() * Math.PI * 2;
-        const distance = Math.random() * Math.max(canvas.width, canvas.height);
-        this.x = canvas.width / 2 + Math.cos(angle) * distance;
-        this.y = canvas.height / 2 + Math.sin(angle) * distance;
+        const distance = Math.random() * Math.max(canvas.width / (Math.min(window.devicePixelRatio, 2)), canvas.height / (Math.min(window.devicePixelRatio, 2)));
+        const centerX = canvas.width / (Math.min(window.devicePixelRatio, 2) * 2);
+        const centerY = canvas.height / (Math.min(window.devicePixelRatio, 2) * 2);
+        this.x = centerX + Math.cos(angle) * distance;
+        this.y = centerY + Math.sin(angle) * distance;
         this.speed = Math.random() * 0.5 + 0.2;
-        this.hue = Math.random() * 180 + 180; // Extended range for neon colors (cyan to magenta)
+        this.hue = Math.random() * 180 + 180;
         this.opacity = Math.random() * 0.5 + 0.5;
         this.spiralOffset = Math.random() * Math.PI * 2;
         this.trail = [];
       }
 
       update() {
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
+        const dpr = Math.min(window.devicePixelRatio, 2);
+        const centerX = canvas.width / (dpr * 2);
+        const centerY = canvas.height / (dpr * 2);
         
-        // Store current position in trail
         this.trail.push({ x: this.x, y: this.y });
         if (this.trail.length > this.maxTrailLength) {
           this.trail.shift();
@@ -140,21 +154,17 @@ const Hero = () => {
         const distance = Math.sqrt(dx * dx + dy * dy);
         const angle = Math.atan2(dy, dx);
         
-        // Spiral effect
         const spiralAngle = angle + (1 / (distance + 50)) * 10 + this.spiralOffset;
         
         this.x += Math.cos(spiralAngle) * this.speed * (distance / 100);
         this.y += Math.sin(spiralAngle) * this.speed * (distance / 100);
         
-        // Increase speed as it gets closer
         this.speed += 0.02;
         
-        // Reset if too close to center
         if (distance < 30) {
           this.reset();
         }
 
-        // Fade as approaching center
         if (distance < 200) {
           this.opacity = (distance / 200) * 0.8;
         }
@@ -170,7 +180,6 @@ const Hero = () => {
           ctx.lineTo(this.trail[i].x, this.trail[i].y);
         }
         
-        // Create neon gradient along the line
         const gradient = ctx.createLinearGradient(
           this.trail[0].x, 
           this.trail[0].y, 
@@ -178,9 +187,8 @@ const Hero = () => {
           this.y
         );
         
-        // Neon gradient with vibrant colors
         const hue1 = this.hue;
-        const hue2 = (this.hue + 60) % 360; // Shift hue for gradient effect
+        const hue2 = (this.hue + 60) % 360;
         const hue3 = (this.hue + 120) % 360;
         
         gradient.addColorStop(0, `hsla(${hue1}, 100%, 50%, 0)`);
@@ -191,14 +199,11 @@ const Hero = () => {
         ctx.strokeStyle = gradient;
         ctx.lineWidth = 2.5;
         ctx.lineCap = 'round';
-        
-        // Enhanced glow effect for neon look
-        ctx.shadowBlur = 20;
+        ctx.shadowBlur = 15;
         ctx.shadowColor = `hsla(${this.hue}, 100%, 60%, ${this.opacity})`;
         ctx.stroke();
         
-        // Add extra glow layer
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 8;
         ctx.lineWidth = 1.5;
         ctx.stroke();
         
@@ -206,21 +211,31 @@ const Hero = () => {
       }
     }
 
-    // Create particles
-    for (let i = 0; i < 150; i++) {
-      particles.push(new Particle());
+    // Initialize particles
+    particlesRef.current = [];
+    const particleCount = window.innerWidth < 768 ? 75 : 120;
+    for (let i = 0; i < particleCount; i++) {
+      particlesRef.current.push(new Particle());
     }
 
     const animate = () => {
-      // Fade effect
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Draw black hole center
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+      frameCount++;
       
-      // Outer glow
+      if (window.innerWidth < 768 && frameCount % 2 === 0) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      const displayWidth = canvas.width / dpr;
+      const displayHeight = canvas.height / dpr;
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, displayWidth, displayHeight);
+
+      const centerX = displayWidth / 2;
+      const centerY = displayHeight / 2;
+      
       const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 150);
       gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
       gradient.addColorStop(0.3, 'rgba(30, 20, 60, 0.8)');
@@ -232,20 +247,18 @@ const Hero = () => {
       ctx.fillStyle = gradient;
       ctx.fill();
 
-      // Event horizon
       ctx.beginPath();
       ctx.arc(centerX, centerY, 30, 0, Math.PI * 2);
       ctx.fillStyle = '#000';
       ctx.fill();
 
-      // Accretion disk ring
       ctx.beginPath();
       ctx.arc(centerX, centerY, 35 + Math.sin(time * 0.05) * 3, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(100, 50, 200, ${0.5 + Math.sin(time * 0.1) * 0.3})`;
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      particles.forEach(particle => {
+      particlesRef.current.forEach(particle => {
         particle.update();
         particle.draw();
       });
@@ -257,30 +270,21 @@ const Hero = () => {
     animate();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      particlesRef.current = [];
     };
   }, [isDarkMode]);
 
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = useCallback((sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
   return (
     <section 
@@ -289,19 +293,15 @@ const Hero = () => {
         isDarkMode ? 'bg-black' : 'bg-white'
       }`}
     >
-      {/* Black Hole Canvas Background - Only visible in dark mode */}
-      {isDarkMode && (
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full"
-          style={{ background: '#000' }}
-        />
-      )}
+      {/* Canvas for black hole - always render but conditionally animate */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ background: isDarkMode ? '#000' : '#fff' }}
+      />
 
-      {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <div className="p-8 md:p-12">
-          {/* Main Heading */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
             <span className={`block mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
               Hi, I'm
@@ -315,7 +315,6 @@ const Hero = () => {
             </span>
           </h1>
 
-          {/* Animated Role with Scrambling Effect */}
           <div className="h-16 mb-8">
             <p className={`text-xl md:text-3xl ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
               I'm a{' '}
@@ -323,19 +322,11 @@ const Hero = () => {
                 {displayText.split('').map((char, index) => (
                   <span
                     key={index}
-                    className={`
-                      inline-block transition-all duration-100
-                      ${isScrambling && Math.random() > 0.7 
+                    className={`inline-block transition-all duration-100 ${
+                      isScrambling && Math.random() > 0.7 
                         ? `${isDarkMode ? 'text-blue-400' : 'text-blue-600'} animate-pulse transform scale-110` 
                         : isDarkMode ? 'text-blue-400' : 'text-blue-600'
-                      }
-                    `}
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                      transform: isScrambling && Math.random() > 0.8 
-                        ? `translateY(${Math.random() * 4 - 2}px)` 
-                        : 'none'
-                    }}
+                    }`}
                   >
                     {char === ' ' ? '\u00A0' : char}
                   </span>
@@ -345,14 +336,12 @@ const Hero = () => {
             </p>
           </div>
 
-          {/* Description */}
           <p className={`text-lg md:text-xl mb-10 max-w-3xl mx-auto leading-relaxed ${
             isDarkMode ? 'text-gray-300' : 'text-gray-700'
           }`}>
             Building digital experiences that make a difference, one line of code at a time.
           </p>
 
-          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={() => scrollToSection('projects')}
@@ -364,7 +353,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
         <ChevronDown size={32} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
       </div>
