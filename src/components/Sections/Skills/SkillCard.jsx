@@ -1,7 +1,9 @@
-// src/components/sections/Skills/SkillCard.jsx
-import React, { useState } from 'react';
+// OPTIMIZATION: Wrap pure components with React.memo
 
-const SkillCard = ({ skill, delay = 0, isVisible }) => {
+// src/components/Sections/Skills/SkillCard.jsx
+import React, { useState, memo } from 'react';
+
+const SkillCard = memo(({ skill, delay = 0, isVisible }) => {
   const { name, icon: IconComponent, color } = skill;
   const [isHovered, setIsHovered] = useState(false);
 
@@ -20,7 +22,6 @@ const SkillCard = ({ skill, delay = 0, isVisible }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background gradient effect */}
       <div 
         className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
         style={{
@@ -28,9 +29,7 @@ const SkillCard = ({ skill, delay = 0, isVisible }) => {
         }}
       />
       
-      {/* Content */}
       <div className="relative z-10 flex items-center space-x-3">
-        {/* Icon container */}
         <div 
           className={`
             w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300
@@ -50,7 +49,6 @@ const SkillCard = ({ skill, delay = 0, isVisible }) => {
           />
         </div>
         
-        {/* Skill name */}
         <div className="flex-1">
           <h4 className="font-semibold text-sm text-gray-900 dark:text-white transition-colors duration-300">
             {name}
@@ -58,7 +56,6 @@ const SkillCard = ({ skill, delay = 0, isVisible }) => {
         </div>
       </div>
       
-      {/* Bottom accent line */}
       <div 
         className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
           isHovered ? 'w-full' : 'w-0'
@@ -69,6 +66,8 @@ const SkillCard = ({ skill, delay = 0, isVisible }) => {
       />
     </div>
   );
-};
+});
+
+SkillCard.displayName = 'SkillCard';
 
 export default SkillCard;

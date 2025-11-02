@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 
 const Hero = () => {
-  const { isDarkMode } = useTheme(); // Get theme from context
+  const { isDarkMode } = useTheme();
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrambling, setIsScrambling] = useState(false);
@@ -12,6 +12,7 @@ const Hero = () => {
   const timeoutRef = useRef(null);
   const animationRef = useRef(null);
   const particlesRef = useRef([]);
+  const isAnimatingRef = useRef(false);
   
   const roles = useMemo(() => [
     'Web Developer',
@@ -77,27 +78,26 @@ const Hero = () => {
     };
   }, [currentIndex, roles, animateToText]);
 
-  // Black hole canvas animation - ONLY IN DARK MODE
+  // OPTIMIZED: Reduced particles, skip frames on mobile, pause when not visible
   useEffect(() => {
     const canvas = canvasRef.current;
-    
-    // Clear and exit if not in dark mode or no canvas
-    if (!canvas) return;
-    
+    if (!canvas || !isDarkMode) {
+      if (canvas) {
+        const ctx = canvas.getContext('2d', { alpha: false });
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      return;
+    }
+
     const ctx = canvas.getContext('2d', { 
       alpha: false,
       desynchronized: true
     });
 
-    if (!isDarkMode) {
-      // Clear canvas in light mode
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      return;
-    }
-
     let time = 0;
     let frameCount = 0;
+    isAnimatingRef.current = true;
 
     const resizeCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio, 2);
@@ -118,11 +118,17 @@ const Hero = () => {
     };
     window.addEventListener('resize', handleResize);
 
+    // OPTIMIZATION: Use Intersection Observer to pause when not visible
+    const observer = new IntersectionObserver((entries) => {
+      isAnimatingRef.current = entries[0].isIntersecting;
+    }, { threshold: 0.1 });
+    observer.observe(canvas);
+
     class Particle {
       constructor() {
         this.reset();
         this.trail = [];
-        this.maxTrailLength = 20;
+        this.maxTrailLength = window.innerWidth < 768 ? 10 : 15; // Reduced trail length
       }
 
       reset() {
@@ -211,16 +217,23 @@ const Hero = () => {
       }
     }
 
-    // Initialize particles
+    // OPTIMIZATION: Reduced particle count
     particlesRef.current = [];
-    const particleCount = window.innerWidth < 768 ? 75 : 120;
+    const particleCount = window.innerWidth < 768 ? 40 : 60; // Reduced from 75/120
     for (let i = 0; i < particleCount; i++) {
       particlesRef.current.push(new Particle());
     }
 
     const animate = () => {
+      // OPTIMIZATION: Pause animation when not visible
+      if (!isAnimatingRef.current) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       frameCount++;
       
+      // OPTIMIZATION: Skip every other frame on mobile
       if (window.innerWidth < 768 && frameCount % 2 === 0) {
         animationRef.current = requestAnimationFrame(animate);
         return;
@@ -272,10 +285,12 @@ const Hero = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeout);
+      observer.disconnect();
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
       particlesRef.current = [];
+      isAnimatingRef.current = false;
     };
   }, [isDarkMode]);
 
@@ -293,7 +308,6 @@ const Hero = () => {
         isDarkMode ? 'bg-black' : 'bg-white'
       }`}
     >
-      {/* Canvas for black hole - always render but conditionally animate */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"

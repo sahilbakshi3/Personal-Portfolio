@@ -1,7 +1,6 @@
-// src/components/layout/Header/Navigation.jsx
-import React from 'react';
+import React, { memo } from 'react';
 
-const Navigation = ({ navItems, activeSection, onNavigate, className = '', mobile = false }) => {
+const Navigation = memo(({ navItems, activeSection, onNavigate, className = '', mobile = false }) => {
   return (
     <nav className={className}>
       {navItems.map((item) => (
@@ -25,6 +24,8 @@ const Navigation = ({ navItems, activeSection, onNavigate, className = '', mobil
       ))}
     </nav>
   );
-};
+});
+
+Navigation.displayName = 'Navigation';
 
 export default Navigation;

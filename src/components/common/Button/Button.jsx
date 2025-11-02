@@ -1,7 +1,6 @@
-// src/components/common/Button/Button.jsx
-import React from 'react';
+import React, { memo } from 'react';
 
-const Button = ({ 
+const Button = memo(({ 
   children, 
   onClick, 
   variant = 'primary', 
@@ -44,6 +43,8 @@ const Button = ({
       {children}
     </button>
   );
-};
+});
+
+Button.displayName = 'Button';
 
 export default Button;
