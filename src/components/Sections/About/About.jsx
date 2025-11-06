@@ -169,7 +169,7 @@ const About = () => {
               {/* CTA Button */}
               <div className="pt-6">
                 <a
-                  href="/SAHIL_BAKSHI_RESUME.pdf"
+                  href="/RESUME.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

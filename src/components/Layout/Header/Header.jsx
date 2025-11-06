@@ -1,43 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Home, User, Code, Briefcase, Menu, X } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import ThemeToggle from '../../common/ThemeToggle/ThemeToggle';
-import Navigation from './Navigation';
-import logo from '../../Assets/Images/my_logo.png'; 
+import logo from '../../Assets/Images/my_logo.png';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFloatingVisible, setIsFloatingVisible] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isDarkMode } = useTheme();
 
-  const navItems = ['home', 'about', 'skills', 'projects'];
+  const navItems = [
+    { id: 'home', icon: Home, label: 'Home' },
+    { id: 'about', icon: User, label: 'About' },
+    { id: 'skills', icon: Code, label: 'Skills' },
+    { id: 'projects', icon: Briefcase, label: 'Projects' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      
-      // Update active section based on scroll position
-      const sections = navItems.map(item => document.getElementById(item));
-      const scrollPosition = window.scrollY + 100;
+      // Show floating navbar after scrolling 100px
+      setIsFloatingVisible(window.scrollY > 100);
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
+      // Update active section based on scroll position
+      const scrollPosition = window.scrollY + 150;
+      
+      for (let i = navItems.length - 1; i >= 0; i--) {
+        const section = document.getElementById(navItems[i].id);
         if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navItems[i]);
+          setActiveSection(navItems[i].id);
           break;
         }
       }
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 80; // Header height offset
+      const offset = 100;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -47,146 +52,187 @@ const Header = () => {
       });
       
       setActiveSection(sectionId);
-      setIsMenuOpen(false);
+      setIsMobileMenuOpen(false);
     }
   };
 
   return (
-    <header 
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled 
-          ? `${isDarkMode 
-              ? 'bg-black/95 border-b border-gray-800/50' 
-              : 'bg-white/95 border-b border-gray-200/50'
-            } backdrop-blur-md shadow-lg` 
-          : 'bg-transparent'
-      }`}
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-20">
-          
-          {/* Logo Section - Left aligned */}
-          <a 
-            href="#home" 
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection('home');
-            }}
-            className="flex items-center space-x-3 cursor-pointer group z-50"
-          >
-            {/* Logo Container with Enhanced Styling */}
-            <div className={`
-              relative w-12 h-12 rounded-full overflow-hidden transition-all duration-300
-              group-hover:scale-110 group-hover:rotate-6
-              ${isDarkMode 
-                ? 'bg-gradient-to-br from-blue-600/20 to-purple-600/20 ring-2 ring-blue-500/40 shadow-lg shadow-blue-500/30' 
-                : 'bg-gradient-to-br from-blue-100 to-purple-100 ring-2 ring-blue-300/50 shadow-lg shadow-blue-200/50'
-              }
-            `}>
-              <img 
-                src={logo} 
-                alt="SB" 
-                className={`
-                  w-full h-full object-cover transition-all duration-300
-                  group-hover:scale-110
-                  ${isDarkMode 
-                    ? 'brightness-110 contrast-110' 
-                    : 'brightness-100'
-                  }
-                `}
-              />
-              {/* Glow Effect on Hover */}
-              <div className={`
-                absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300
-                ${isDarkMode 
-                  ? 'bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20' 
-                  : 'bg-gradient-to-br from-blue-400/10 via-purple-400/10 to-pink-400/10'
-                }
-              `} />
-            </div>
-
-            {/* Brand Name - Hidden on mobile, visible on larger screens */}
-            <div className="hidden sm:flex flex-col">
-              <span className={`
-                text-xl font-bold leading-none transition-colors duration-300
-                ${isDarkMode 
-                  ? 'text-white group-hover:text-blue-400' 
-                  : 'text-gray-900 group-hover:text-blue-600'
-                }
-              `}>
-                Sahil Bakshi
-              </span>
-              <span className={`
-                text-xs font-medium tracking-wider leading-none mt-0.5
-                ${isDarkMode 
-                  ? 'text-gray-400 group-hover:text-purple-400' 
-                  : 'text-gray-600 group-hover:text-purple-600'
-                }
-              `}>
-                PORTFOLIO
-              </span>
-            </div>
-          </a>
-
-          {/* Desktop Navigation & Theme Toggle - Centered/Right aligned */}
-          <div className="hidden md:flex items-center space-x-2 ml-auto">
-            <Navigation 
-              navItems={navItems}
-              activeSection={activeSection}
-              onNavigate={scrollToSection}
-              className="flex items-center space-x-1"
-            />
-            
-            <div className="ml-4 pl-4 border-l border-gray-300 dark:border-gray-700">
-              <ThemeToggle />
-            </div>
-          </div>
-
-          {/* Mobile Menu Button & Theme Toggle - Right aligned */}
-          <div className="flex md:hidden items-center space-x-3 ml-auto">
-            <ThemeToggle />
-            
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`
-                p-2 rounded-lg transition-all duration-300
-                ${isDarkMode 
-                  ? 'hover:bg-gray-800 text-gray-200' 
-                  : 'hover:bg-gray-100 text-gray-700'
-                }
-              `}
-              aria-label="Toggle mobile menu"
+    <>
+      {/* Static Logo Header - Visible at top */}
+      <header 
+        className={`fixed top-0 w-full z-40 transition-all duration-500 ${
+          isFloatingVisible 
+            ? 'opacity-0 pointer-events-none' 
+            : 'opacity-100'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo Section */}
+            <a 
+              href="#home" 
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection('home');
+              }}
+              className="flex items-center space-x-3 cursor-pointer group"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
+              <div className={`
+                relative w-12 h-12 rounded-full overflow-hidden transition-all duration-300
+                group-hover:scale-110 group-hover:rotate-6
+                ${isDarkMode 
+                  ? 'bg-gradient-to-br from-blue-600/20 to-purple-600/20 ring-2 ring-blue-500/40 shadow-lg shadow-blue-500/30' 
+                  : 'bg-gradient-to-br from-blue-100 to-purple-100 ring-2 ring-blue-300/50 shadow-lg shadow-blue-200/50'
+                }
+              `}>
+                <img 
+                  src={logo} 
+                  alt="SB" 
+                  className={`
+                    w-full h-full object-cover transition-all duration-300
+                    group-hover:scale-110
+                    ${isDarkMode ? 'brightness-110 contrast-110' : 'brightness-100'}
+                  `}
+                />
+                <div className={`
+                  absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                  ${isDarkMode 
+                    ? 'bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20' 
+                    : 'bg-gradient-to-br from-blue-400/10 via-purple-400/10 to-pink-400/10'
+                  }
+                `} />
+              </div>
 
-        {/* Mobile Menu */}
-        <div 
-          className={`
-            md:hidden overflow-hidden transition-all duration-300 ease-in-out
-            ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
-          `}
-        >
-          <div className={`
-            py-4 border-t
-            ${isDarkMode 
-              ? 'border-gray-800 bg-black/95' 
-              : 'border-gray-200 bg-white/95'
-            }
-          `}>
-            <Navigation 
-              navItems={navItems}
-              activeSection={activeSection}
-              onNavigate={scrollToSection}
-              className="flex flex-col space-y-1 px-2"
-              mobile
-            />
+              <div className="hidden sm:flex flex-col">
+                <span className={`
+                  text-xl font-bold leading-none transition-colors duration-300
+                  ${isDarkMode 
+                    ? 'text-white group-hover:text-blue-400' 
+                    : 'text-gray-900 group-hover:text-blue-600'
+                  }
+                `}>
+                  Sahil Bakshi
+                </span>
+                <span className={`
+                  text-xs font-medium tracking-wider leading-none mt-0.5
+                  ${isDarkMode 
+                    ? 'text-gray-400 group-hover:text-purple-400' 
+                    : 'text-gray-600 group-hover:text-purple-600'
+                  }
+                `}>
+                  PORTFOLIO
+                </span>
+              </div>
+            </a>
+
+            <ThemeToggle />
           </div>
         </div>
-      </nav>
-    </header>
+      </header>
+
+      {/* Floating Navbar - Appears on scroll */}
+      <div
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${
+          isFloatingVisible 
+            ? 'translate-y-0 opacity-100' 
+            : '-translate-y-20 opacity-0 pointer-events-none'
+        }`}
+      >
+        {/* Desktop Navigation */}
+        <nav
+          className={`hidden md:flex items-center gap-1 px-4 py-3 rounded-full backdrop-blur-lg border shadow-2xl ${
+            isDarkMode
+              ? 'bg-black/80 border-gray-800/50 shadow-blue-500/10'
+              : 'bg-white/80 border-gray-200/50 shadow-gray-500/10'
+          }`}
+        >
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
+            
+            return (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`group relative flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                    : isDarkMode
+                    ? 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="text-sm font-medium">{item.label}</span>
+                
+                {isActive && (
+                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white animate-pulse" />
+                )}
+              </button>
+            );
+          })}
+          
+          <div className={`ml-2 pl-2 border-l ${isDarkMode ? 'border-gray-700' : 'border-gray-300'}`}>
+            <ThemeToggle />
+          </div>
+        </nav>
+
+        {/* Mobile Navigation */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={`flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-lg border shadow-2xl ${
+              isDarkMode
+                ? 'bg-black/80 border-gray-800/50 text-white'
+                : 'bg-white/80 border-gray-200/50 text-gray-900'
+            }`}
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <span className="text-sm font-medium">Menu</span>
+          </button>
+
+          {isMobileMenuOpen && (
+            <div
+              className={`absolute top-16 left-1/2 -translate-x-1/2 w-48 rounded-2xl backdrop-blur-lg border shadow-2xl overflow-hidden ${
+                isDarkMode
+                  ? 'bg-black/90 border-gray-800/50'
+                  : 'bg-white/90 border-gray-200/50'
+              }`}
+            >
+              <div className="p-2">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeSection === item.id;
+                  
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => scrollToSection(item.id)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+                        isActive
+                          ? 'bg-blue-600 text-white'
+                          : isDarkMode
+                          ? 'text-gray-300 hover:bg-gray-800/50'
+                          : 'text-gray-600 hover:bg-gray-100/50'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="text-sm font-medium">{item.label}</span>
+                    </button>
+                  );
+                })}
+                
+                <div className={`my-2 border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`} />
+                
+                <div className="px-4 py-2">
+                  <ThemeToggle />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
