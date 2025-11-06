@@ -10,13 +10,10 @@ const Hero = () => {
   const canvasRef = useRef(null);
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
-  const animationRef = useRef(null);
-  const particlesRef = useRef([]);
-  const isAnimatingRef = useRef(false);
-  
+
   const roles = useMemo(() => [
     'Web Developer',
-    'UI/UX Designer', 
+    'UI/UX Designer',
     'Electronics Engineer',
     'Problem Solver'
   ], []);
@@ -31,24 +28,22 @@ const Hero = () => {
     setIsScrambling(true);
     let iteration = 0;
     const maxIterations = 30;
-    
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    
+
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
     intervalRef.current = setInterval(() => {
-      const scrambledText = Array.from(targetText, (char, i) => 
+      const scrambledText = Array.from(targetText, (char, i) =>
         iteration > i * 2 ? char : getRandomChar()
       ).join('');
-      
+
       setDisplayText(scrambledText);
       iteration++;
-      
+
       if (iteration >= maxIterations) {
         clearInterval(intervalRef.current);
         setDisplayText(targetText);
         setIsScrambling(false);
-        
+
         timeoutRef.current = setTimeout(() => {
           setCurrentIndex((prev) => (prev + 1) % roles.length);
         }, 2000);
@@ -58,252 +53,51 @@ const Hero = () => {
 
   useEffect(() => {
     const currentRole = roles[currentIndex];
-    
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
     const startDelay = setTimeout(() => {
       animateToText(currentRole);
     }, 100);
-    
+
     return () => {
       clearTimeout(startDelay);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, [currentIndex, roles, animateToText]);
 
-  // OPTIMIZED: Reduced particles, skip frames on mobile, pause when not visible
+  // Just plain background filling canvas
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !isDarkMode) {
-      if (canvas) {
-        const ctx = canvas.getContext('2d', { alpha: false });
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      return;
-    }
+    if (!canvas) return;
 
-    const ctx = canvas.getContext('2d', { 
-      alpha: false,
-      desynchronized: true
-    });
+    const ctx = canvas.getContext('2d', { alpha: false });
 
-    let time = 0;
-    let frameCount = 0;
-    isAnimatingRef.current = true;
-
-    const resizeCanvas = () => {
-      const dpr = Math.min(window.devicePixelRatio, 2);
+    const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
-      canvas.style.width = rect.width + 'px';
-      canvas.style.height = rect.height + 'px';
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      ctx.fillStyle = isDarkMode ? '#000' : '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
 
-    resizeCanvas();
+    resize();
+    window.addEventListener('resize', resize);
     
-    let resizeTimeout;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(resizeCanvas, 250);
-    };
-    window.addEventListener('resize', handleResize);
-
-    // OPTIMIZATION: Use Intersection Observer to pause when not visible
-    const observer = new IntersectionObserver((entries) => {
-      isAnimatingRef.current = entries[0].isIntersecting;
-    }, { threshold: 0.1 });
-    observer.observe(canvas);
-
-    class Particle {
-      constructor() {
-        this.reset();
-        this.trail = [];
-        this.maxTrailLength = window.innerWidth < 768 ? 10 : 15; // Reduced trail length
-      }
-
-      reset() {
-        const angle = Math.random() * Math.PI * 2;
-        const distance = Math.random() * Math.max(canvas.width / (Math.min(window.devicePixelRatio, 2)), canvas.height / (Math.min(window.devicePixelRatio, 2)));
-        const centerX = canvas.width / (Math.min(window.devicePixelRatio, 2) * 2);
-        const centerY = canvas.height / (Math.min(window.devicePixelRatio, 2) * 2);
-        this.x = centerX + Math.cos(angle) * distance;
-        this.y = centerY + Math.sin(angle) * distance;
-        this.speed = Math.random() * 0.5 + 0.2;
-        this.hue = Math.random() * 180 + 180;
-        this.opacity = Math.random() * 0.5 + 0.5;
-        this.spiralOffset = Math.random() * Math.PI * 2;
-        this.trail = [];
-      }
-
-      update() {
-        const dpr = Math.min(window.devicePixelRatio, 2);
-        const centerX = canvas.width / (dpr * 2);
-        const centerY = canvas.height / (dpr * 2);
-        
-        this.trail.push({ x: this.x, y: this.y });
-        if (this.trail.length > this.maxTrailLength) {
-          this.trail.shift();
-        }
-        
-        const dx = centerX - this.x;
-        const dy = centerY - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const angle = Math.atan2(dy, dx);
-        
-        const spiralAngle = angle + (1 / (distance + 50)) * 10 + this.spiralOffset;
-        
-        this.x += Math.cos(spiralAngle) * this.speed * (distance / 100);
-        this.y += Math.sin(spiralAngle) * this.speed * (distance / 100);
-        
-        this.speed += 0.02;
-        
-        if (distance < 30) {
-          this.reset();
-        }
-
-        if (distance < 200) {
-          this.opacity = (distance / 200) * 0.8;
-        }
-      }
-
-      draw() {
-        if (this.trail.length < 2) return;
-        
-        ctx.beginPath();
-        ctx.moveTo(this.trail[0].x, this.trail[0].y);
-        
-        for (let i = 1; i < this.trail.length; i++) {
-          ctx.lineTo(this.trail[i].x, this.trail[i].y);
-        }
-        
-        const gradient = ctx.createLinearGradient(
-          this.trail[0].x, 
-          this.trail[0].y, 
-          this.x, 
-          this.y
-        );
-        
-        const hue1 = this.hue;
-        const hue2 = (this.hue + 60) % 360;
-        const hue3 = (this.hue + 120) % 360;
-        
-        gradient.addColorStop(0, `hsla(${hue1}, 100%, 50%, 0)`);
-        gradient.addColorStop(0.3, `hsla(${hue2}, 100%, 60%, ${this.opacity * 0.6})`);
-        gradient.addColorStop(0.7, `hsla(${hue3}, 100%, 70%, ${this.opacity * 0.8})`);
-        gradient.addColorStop(1, `hsla(${this.hue}, 100%, 80%, ${this.opacity})`);
-        
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 2.5;
-        ctx.lineCap = 'round';
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = `hsla(${this.hue}, 100%, 60%, ${this.opacity})`;
-        ctx.stroke();
-        
-        ctx.shadowBlur = 8;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-        
-        ctx.shadowBlur = 0;
-      }
-    }
-
-    // OPTIMIZATION: Reduced particle count
-    particlesRef.current = [];
-    const particleCount = window.innerWidth < 768 ? 40 : 60; // Reduced from 75/120
-    for (let i = 0; i < particleCount; i++) {
-      particlesRef.current.push(new Particle());
-    }
-
-    const animate = () => {
-      // OPTIMIZATION: Pause animation when not visible
-      if (!isAnimatingRef.current) {
-        animationRef.current = requestAnimationFrame(animate);
-        return;
-      }
-
-      frameCount++;
-      
-      // OPTIMIZATION: Skip every other frame on mobile
-      if (window.innerWidth < 768 && frameCount % 2 === 0) {
-        animationRef.current = requestAnimationFrame(animate);
-        return;
-      }
-
-      const dpr = Math.min(window.devicePixelRatio, 2);
-      const displayWidth = canvas.width / dpr;
-      const displayHeight = canvas.height / dpr;
-
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-      ctx.fillRect(0, 0, displayWidth, displayHeight);
-
-      const centerX = displayWidth / 2;
-      const centerY = displayHeight / 2;
-      
-      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 150);
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
-      gradient.addColorStop(0.3, 'rgba(30, 20, 60, 0.8)');
-      gradient.addColorStop(0.6, 'rgba(60, 40, 120, 0.3)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 150, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 30, 0, Math.PI * 2);
-      ctx.fillStyle = '#000';
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 35 + Math.sin(time * 0.05) * 3, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(100, 50, 200, ${0.5 + Math.sin(time * 0.1) * 0.3})`;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      particlesRef.current.forEach(particle => {
-        particle.update();
-        particle.draw();
-      });
-
-      time++;
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animate();
-
     return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimeout);
-      observer.disconnect();
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      particlesRef.current = [];
-      isAnimatingRef.current = false;
+      window.removeEventListener('resize', resize);
     };
   }, [isDarkMode]);
 
   const scrollToSection = useCallback((sectionId) => {
     const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   return (
-    <section 
-      id="home" 
+    <section
+      id="home"
       className={`pt-20 min-h-screen flex items-center justify-center relative overflow-hidden ${
         isDarkMode ? 'bg-black' : 'bg-white'
       }`}
@@ -320,11 +114,13 @@ const Hero = () => {
             <span className={`block mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
               Hi, I'm
             </span>
-            <span className={`block bg-gradient-to-r ${
-              isDarkMode 
-                ? 'from-blue-400 via-purple-400 to-indigo-400' 
-                : 'from-blue-600 via-purple-600 to-indigo-600'
-            } bg-clip-text text-transparent`}>
+            <span
+              className={`block bg-gradient-to-r ${
+                isDarkMode
+                  ? 'from-blue-400 via-purple-400 to-indigo-400'
+                  : 'from-blue-600 via-purple-600 to-indigo-600'
+              } bg-clip-text text-transparent`}
+            >
               Sahil Bakshi
             </span>
           </h1>
@@ -337,9 +133,11 @@ const Hero = () => {
                   <span
                     key={index}
                     className={`inline-block transition-all duration-100 ${
-                      isScrambling && Math.random() > 0.7 
-                        ? `${isDarkMode ? 'text-blue-400' : 'text-blue-600'} animate-pulse transform scale-110` 
-                        : isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                      isScrambling && Math.random() > 0.7
+                        ? `${isDarkMode ? 'text-blue-400' : 'text-blue-600'} animate-pulse transform scale-110`
+                        : isDarkMode
+                        ? 'text-blue-400'
+                        : 'text-blue-600'
                     }`}
                   >
                     {char === ' ' ? '\u00A0' : char}
@@ -350,9 +148,11 @@ const Hero = () => {
             </p>
           </div>
 
-          <p className={`text-lg md:text-xl mb-10 max-w-3xl mx-auto leading-relaxed ${
-            isDarkMode ? 'text-gray-300' : 'text-gray-700'
-          }`}>
+          <p
+            className={`text-lg md:text-xl mb-10 max-w-3xl mx-auto leading-relaxed ${
+              isDarkMode ? 'text-gray-300' : 'text-gray-700'
+            }`}
+          >
             Building digital experiences that make a difference, one line of code at a time.
           </p>
 

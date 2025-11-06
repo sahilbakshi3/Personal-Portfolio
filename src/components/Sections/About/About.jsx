@@ -1,107 +1,156 @@
-// src/components/Sections/About/About.jsx
 import React from 'react';
-import { Download, MapPin, Calendar, GraduationCap, Code, Briefcase } from 'lucide-react';
+import { Download, MapPin, Calendar, GraduationCap } from 'lucide-react';
 import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
 import Button from '../../common/Button/Button';
 import { personalInfo } from '../../Data/PersonalInfo';
+import Timeline from '../../ui/Timeline';
 
 const About = () => {
   const [elementRef, isVisible] = useIntersectionObserver();
 
-  const stats = [
-    { label: 'Projects Completed', value: '10+', icon: Code },
-    { label: 'Years of Learning', value: '2+', icon: Calendar },
-    { label: 'Technologies', value: '15+', icon: GraduationCap },
-    { label: 'Happy Clients', value: '2+', icon: Briefcase }
+  // Build timeline entries from your data
+  // Example 1: Experience timeline (map your personalInfo.experience)
+  const experienceTimeline = (personalInfo?.experience ?? []).map((exp) => ({
+    title: exp.duration || exp.year || '—',
+    content: (
+      <div>
+        <h5 className="mb-1 text-base font-semibold text-gray-900 dark:text-white">
+          {exp.title} <span className="font-normal">at</span> {exp.company}
+        </h5>
+        <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">{exp.location ?? ''}</p>
+        <p className="mb-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          {exp.description}
+        </p>
+        {Array.isArray(exp.technologies) && exp.technologies.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {exp.technologies.map((t, i) => (
+              <span
+                key={i}
+                className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    ),
+  }));
+
+  // Example 2: A milestones timeline like your demo with images
+  const milestonesTimeline = [
+    {
+      title: "2024",
+      content: (
+        <div>
+          <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+            Shipped my portfolio revamp and multiple UI micro-interactions.
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <img
+              src="https://assets.aceternity.com/templates/startup-1.webp"
+              alt="Milestone 1"
+              className="h-24 w-full rounded-lg object-cover shadow md:h-40 lg:h-52"
+            />
+            <img
+              src="https://assets.aceternity.com/templates/startup-2.webp"
+              alt="Milestone 2"
+              className="h-24 w-full rounded-lg object-cover shadow md:h-40 lg:h-52"
+            />
+            <img
+              src="https://assets.aceternity.com/templates/startup-3.webp"
+              alt="Milestone 3"
+              className="h-24 w-full rounded-lg object-cover shadow md:h-40 lg:h-52"
+            />
+            <img
+              src="https://assets.aceternity.com/templates/startup-4.webp"
+              alt="Milestone 4"
+              className="h-24 w-full rounded-lg object-cover shadow md:h-40 lg:h-52"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Early 2023",
+      content: (
+        <div>
+          <p className="mb-3 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+            Built a set of reusable components and shipped client work.
+          </p>
+          <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
+            Focused on performance, accessibility, and delightful interactions.
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <img
+              src="https://assets.aceternity.com/pro/hero-sections.png"
+              alt="Hero sections"
+              className="h-24 w-full rounded-lg object-cover shadow md:h-40 lg:h-52"
+            />
+            <img
+              src="https://assets.aceternity.com/features-section.png"
+              alt="Features section"
+              className="h-24 w-full rounded-lg object-cover shadow md:h-40 lg:h-52"
+            />
+            <img
+              src="https://assets.aceternity.com/pro/bento-grids.png"
+              alt="Bento grids"
+              className="h-24 w-full rounded-lg object-cover shadow md:h-40 lg:h-52"
+            />
+            <img
+              src="https://assets.aceternity.com/cards.png"
+              alt="Cards"
+              className="h-24 w-full rounded-lg object-cover shadow md:h-40 lg:h-52"
+            />
+          </div>
+        </div>
+      ),
+    },
   ];
 
   return (
-    <section id="about" className="py-20 px-4 bg-white dark:bg-black">
-      <div className="max-w-6xl mx-auto">
-        <div 
+    <section id="about" className="bg-white px-4 py-20 dark:bg-black">
+      <div className="mx-auto max-w-6xl">
+        <div
           ref={elementRef}
           className={`transition-all duration-1000 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
           }`}
         >
           {/* Section Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">
               About <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Me</span>
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-xl text-gray-600 dark:text-gray-300">
               Get to know more about who I am, what I do, and what skills I have
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Image & Stats */}
+          <div className="grid items-start gap-12 lg:grid-cols-2">
+            {/* Left Column - Image & Education */}
             <div className="space-y-8">
               {/* Profile Image */}
               <div className="relative">
-                <div className="w-80 h-80 mx-auto relative">
-                  {/* Background gradient decoration */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl transform rotate-6"></div>
-                  
-                  {/* Main image container */}
-                  <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl">
-                    <img 
-                      src="/photo.jpeg" 
+                <div className="relative mx-auto h-80 w-80">
+                  <div className="absolute inset-0 rotate-6 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600" />
+                  <div className="absolute inset-0 overflow-hidden rounded-2xl shadow-2xl">
+                    <img
+                      src="/photo.jpeg"
                       alt={personalInfo.name}
-                      className="w-full h-full object-cover object-center"
-                      style={{
-                        filter: 'brightness(1.1) contrast(1.05) saturate(1.1)'
-                      }}
+                      className="h-full w-full object-cover object-center"
+                      style={{ filter: 'brightness(1.1) contrast(1.05) saturate(1.1)' }}
                     />
-                    {/* Overlay for better text contrast in dark mode */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent dark:from-black/40"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent dark:from-black/40" />
                   </div>
-
-                  {/* Floating elements for visual interest */}
-                  <div className="absolute -top-4 -right-4 w-8 h-8 bg-blue-500 rounded-full opacity-80 animate-pulse"></div>
-                  <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-purple-500 rounded-full opacity-80 animate-pulse delay-1000"></div>
+                  <div className="absolute -right-4 -top-4 h-8 w-8 animate-pulse rounded-full bg-blue-500 opacity-80" />
+                  <div className="absolute -bottom-4 -left-4 h-6 w-6 animate-pulse rounded-full bg-purple-500 opacity-80 delay-1000" />
                 </div>
               </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 gap-4">
-                {stats.map((stat, index) => {
-                  const IconComponent = stat.icon;
-                  return (
-                    <div 
-                      key={stat.label}
-                      className={`bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl text-center transform hover:scale-105 transition-all duration-300 group ${
-                        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                      }`}
-                      style={{ transitionDelay: `${index * 100}ms` }}
-                    >
-                      <IconComponent className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300" />
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                        {stat.value}
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {stat.label}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Right Column - Content */}
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  I'm {personalInfo.name}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-6">
-                  {personalInfo.bio.long}
-                </p>
-              </div>
-
               {/* Education */}
-              <div className="bg-gray-50 dark:bg-gray-900 border dark:border-gray-800 p-6 rounded-xl hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-center space-x-3 mb-3">
+              <div className="rounded-xl border p-6 transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
+                <div className="mb-3 flex items-center space-x-3">
                   <GraduationCap className="text-blue-600 dark:text-blue-400" size={24} />
                   <h4 className="text-xl font-semibold text-gray-900 dark:text-white">Education</h4>
                 </div>
@@ -112,72 +161,45 @@ const About = () => {
                   <p className="text-gray-600 dark:text-gray-400">
                     {personalInfo.education.institution} • {personalInfo.education.year}
                   </p>
-                  <div className="flex items-center space-x-2 mt-2">
+                  <div className="mt-2 flex items-center space-x-2">
                     <MapPin size={16} className="text-gray-500 dark:text-gray-400" />
-                    <span className="text-gray-500 dark:text-gray-400 text-sm">{personalInfo.education.location}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {personalInfo.education.location}
+                    </span>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Interests */}
+            {/* Right Column - Bio + Timeline */}
+            <div className="space-y-8">
               <div>
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Interests & Hobbies
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {personalInfo.interests.map((interest, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800 rounded-full text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors duration-300"
-                    >
-                      {interest}
-                    </span>
-                  ))}
-                </div>
+                <h3 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
+                  I'm {personalInfo.name}
+                </h3>
+                <p className="mb-6 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                  {personalInfo.bio.long}
+                </p>
               </div>
 
-              {/* Experience Highlights */}
-              <div>
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Recent Experience
-                </h4>
-                <div className="space-y-4">
-                  {personalInfo.experience.map((exp, index) => (
-                    <div key={index} className="border-l-4 border-blue-600 dark:border-blue-400 pl-4 hover:border-l-6 transition-all duration-300">
-                      <h5 className="font-medium text-gray-900 dark:text-white">
-                        {exp.title} at {exp.company}
-                      </h5>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{exp.duration}</p>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm mb-2">
-                        {exp.description}
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {exp.technologies.map((tech, techIndex) => (
-                          <span
-                            key={techIndex}
-                            className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border dark:border-gray-700 rounded text-xs hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+              {/* Experience Timeline */}
+              {experienceTimeline.length > 0 && (
+                <div>
+                  <h4 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">Experience</h4>
+                  <Timeline data={experienceTimeline} align="alternate" />
                 </div>
+              )}
+
+              {/* Milestones Timeline (optional showcase like your example) */}
+              <div>
+                <h4 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">Milestones</h4>
+                <Timeline data={milestonesTimeline} align="alternate" />
               </div>
 
               {/* CTA Button */}
-              <div className="pt-6">
-                <a
-                  href="/RESUME.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    className="w-full sm:w-auto group"
-                  >
+              <div className="pt-2">
+                <a href="/RESUME.pdf" target="_blank" rel="noopener noreferrer">
+                  <Button variant="primary" size="lg" className="group w-full sm:w-auto">
                     <Download size={20} className="mr-2 group-hover:animate-bounce" />
                     View Resume
                   </Button>
@@ -185,6 +207,7 @@ const About = () => {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
