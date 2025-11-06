@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { ChevronDown } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import Aurora from '../../ui/Aurora.jsx'; 
+import RainbowButton from '../../ui/RainbowButton.jsx';
 
 const Hero = () => {
   const { isDarkMode } = useTheme();
@@ -169,14 +170,17 @@ const Hero = () => {
             Building digital experiences that make a difference, one line of code at a time.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          {/* <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={() => scrollToSection('projects')}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               View My Work
             </button>
-          </div>
+          </div> */}
+          <RainbowButton onClick={() => scrollToSection('projects')}>
+            View My Work
+          </RainbowButton>
         </div>
       </div>
 
