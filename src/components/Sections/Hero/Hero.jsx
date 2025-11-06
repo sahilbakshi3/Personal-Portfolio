@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
+import Aurora from '../../ui/Aurora.jsx'; 
 
 const Hero = () => {
   const { isDarkMode } = useTheme();
@@ -67,10 +68,11 @@ const Hero = () => {
     };
   }, [currentIndex, roles, animateToText]);
 
-  // Just plain background filling canvas
+  // In light mode, paint the canvas to plain white; in dark mode we don't use the canvas.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    if (isDarkMode) return; // dark mode uses Aurora (WebGL), skip
 
     const ctx = canvas.getContext('2d', { alpha: false });
 
@@ -78,16 +80,13 @@ const Hero = () => {
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
-      ctx.fillStyle = isDarkMode ? '#000' : '#fff';
+      ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
 
     resize();
     window.addEventListener('resize', resize);
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-    };
+    return () => window.removeEventListener('resize', resize);
   }, [isDarkMode]);
 
   const scrollToSection = useCallback((sectionId) => {
@@ -102,11 +101,25 @@ const Hero = () => {
         isDarkMode ? 'bg-black' : 'bg-white'
       }`}
     >
+      {/* Light mode canvas background only */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ background: isDarkMode ? '#000' : '#fff' }}
+        className={`absolute inset-0 w-full h-full ${isDarkMode ? 'hidden' : ''}`}
+        style={{ background: !isDarkMode ? '#fff' : undefined }}
       />
+
+      {/* Dark mode aurora (WebGL) */}
+      {isDarkMode && (
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <Aurora
+            // tweak these if you want a different palette or strength
+            colorStops={['#2E1FFF', '#22D3EE', '#7C3AED']}
+            amplitude={1.0}
+            blend={0.6}
+            speed={1.0}
+          />
+        </div>
+      )}
 
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <div className="p-8 md:p-12">
