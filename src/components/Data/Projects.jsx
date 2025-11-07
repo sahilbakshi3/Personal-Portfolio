@@ -47,4 +47,13 @@ export const projects = [
     demoUrl: 'https://morsify-omega.vercel.app/',
     codeUrl: 'https://github.com/sahilbakshi3/Morsify',
   },
+  {
+    id: 6,
+    title: 'Fleet Tracking Dashboard',
+    description: 'A real-time fleet tracking dashboard built with React and Tailwind CSS, enabling live GPS monitoring, vehicle status updates, and interactive map visualisation for efficient fleet management.',
+    image: 'https://images.unsplash.com/photo-1638636206910-49cdd0af6d3c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1332',
+    tags: ['React', 'Tailwind CSS', 'WebSocket', 'JavaScript', 'API Integration'],
+    demoUrl: 'https://fleet-tracking-beige.vercel.app/',
+    codeUrl: 'https://github.com/sahilbakshi3/Fleet-Tracking',
+  },
 ];
