@@ -1,11 +1,12 @@
-// src/App.js - OPTIMIZED VERSION
-import React, { lazy, Suspense } from 'react';
+// src/App.js
+import React, { lazy, Suspense, useState } from 'react';
 import Header from './components/Layout/Header/Header';
-import Footer from './components/Layout/Footer/Footer';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import SplashScreen from './components/common/SplashScreen/SplashScreen';
 import './app.css';
+import SocialLinks from './components/common/SocialLinks/SocialLinks';
 
-// OPTIMIZATION: Lazy load heavy components
+// Lazy load heavy components
 const Hero = lazy(() => import('./components/Sections/Hero/Hero'));
 const About = lazy(() => import('./components/Sections/About/About'));
 const Skills = lazy(() => import('./components/Sections/Skills/Skills'));
@@ -20,7 +21,17 @@ const SectionLoader = () => (
 
 function AppContent() {
   const { isDarkMode } = useTheme();
-  
+  const [showSplash, setShowSplash] = useState(true);
+
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
+
+  // Show splash screen on every load
+  if (showSplash) {
+    return <SplashScreen onComplete={handleSplashComplete} />;
+  }
+
   return (
     <div className={`App min-h-screen transition-colors duration-300 ${
       isDarkMode ? 'bg-black text-white' : 'bg-white text-gray-900'
@@ -43,7 +54,7 @@ function AppContent() {
           <Projects />
         </Suspense>
       </main>
-      <Footer />
+      <SocialLinks />
     </div>
   );
 }
