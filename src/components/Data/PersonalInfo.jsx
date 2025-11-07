@@ -30,7 +30,7 @@ export const personalInfo = {
     degree: 'Bachelor of Engineering',
     field: 'Electronics and Instrumentation',
     institution: 'Shri G.S. Institute of Technology and Science',
-    year: '2020-2024',
+    year: 'Sep 2020 - May 2024',
     location: 'Indore, India'
   },
 

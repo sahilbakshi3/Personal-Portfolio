@@ -10,13 +10,19 @@ module.exports = {
       fontFamily: {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
       },
+
+      /* ✅ Animations (existing + gradient added) */
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'bounce-slow': 'bounce 3s infinite',
         'star-movement-bottom': 'star-movement-bottom linear infinite alternate',
         'star-movement-top': 'star-movement-top linear infinite alternate',
+        // NEW:
+        'gradient': 'gradient 8s linear infinite',
       },
+
+      /* ✅ Keyframes (existing + gradient added) */
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
@@ -34,7 +40,14 @@ module.exports = {
           '0%': { transform: 'translate(0%, 0%)', opacity: '1' },
           '100%': { transform: 'translate(100%, 0%)', opacity: '0' },
         },
+        // NEW:
+        gradient: {
+          '0%':   { backgroundPosition: '0% 50%' },
+          '50%':  { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
       },
+
       colors: {
         primary: {
           50: '#eff6ff',

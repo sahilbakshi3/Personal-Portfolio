@@ -131,3 +131,22 @@ body {
   mask-composite: exclude;
   -webkit-mask-composite: xor;
 }
+
+.clip-text {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent; /* Safari fix */
+}
+
+@keyframes drift-slow {
+  0%   { transform: translate3d(0px, 0px, 0) scale(1); }
+  50%  { transform: translate3d(60px, -40px, 0) scale(1.06); }
+  100% { transform: translate3d(0px, 0px, 0) scale(1); }
+}
+
+.animate-drift-slow {
+  animation: drift-slow 14s ease-in-out infinite;
+  will-change: transform;
+}
+
+
+

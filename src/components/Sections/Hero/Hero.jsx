@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
-import Aurora from '../../ui/Aurora.jsx'; 
+import Aurora from '../../ui/Aurora.jsx';
 import RainbowButton from '../../ui/RainbowButton.jsx';
+import GradientText from '../../ui/GradientText.jsx';
+import LightGlassBackground from '../../ui/LightGlassBackground.jsx'; // <-- NEW
 
 const Hero = () => {
   const { isDarkMode } = useTheme();
@@ -69,11 +71,11 @@ const Hero = () => {
     };
   }, [currentIndex, roles, animateToText]);
 
-  // In light mode, paint the canvas to plain white; in dark mode we don't use the canvas.
+  // We keep the effect for canvas only if you still want it elsewhere.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    if (isDarkMode) return; // dark mode uses Aurora (WebGL), skip
+    if (isDarkMode) return;
 
     const ctx = canvas.getContext('2d', { alpha: false });
 
@@ -102,19 +104,16 @@ const Hero = () => {
         isDarkMode ? 'bg-black' : 'bg-white'
       }`}
     >
-      {/* Light mode canvas background only */}
-      <canvas
-        ref={canvasRef}
-        className={`absolute inset-0 w-full h-full ${isDarkMode ? 'hidden' : ''}`}
-        style={{ background: !isDarkMode ? '#fff' : undefined }}
-      />
+      {/* Light mode glassmorphism background */}
+      {!isDarkMode && (
+        <LightGlassBackground />
+      )}
 
       {/* Dark mode aurora (WebGL) */}
       {isDarkMode && (
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Aurora
-            // tweak these if you want a different palette or strength
-            colorStops={['#2E1FFF', '#22D3EE', '#7C3AED']}
+            colorStops={['#ee7752', '#e73c7e', '#23a6d5', '#23d5ab']}
             amplitude={1.0}
             blend={0.6}
             speed={1.0}
@@ -128,15 +127,16 @@ const Hero = () => {
             <span className={`block mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
               Hi, I'm
             </span>
-            <span
-              className={`block bg-gradient-to-r ${
-                isDarkMode
-                  ? 'from-blue-400 via-purple-400 to-indigo-400'
-                  : 'from-blue-600 via-purple-600 to-indigo-600'
-              } bg-clip-text text-transparent`}
+
+            {/* Animated gradient name (light & dark) */}
+            <GradientText
+              className="clip-text text-4xl md:text-6xl lg:text-7xl leading-tight"
+              colors={['#40ffaa', '#4079ff', '#40ffaa', '#4079ff', '#40ffaa']}
+              animationSpeed={8}
+              showBorder={false}
             >
               Sahil Bakshi
-            </span>
+            </GradientText>
           </h1>
 
           <div className="h-16 mb-8">
@@ -170,14 +170,6 @@ const Hero = () => {
             Building digital experiences that make a difference, one line of code at a time.
           </p>
 
-          {/* <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={() => scrollToSection('projects')}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-            >
-              View My Work
-            </button>
-          </div> */}
           <RainbowButton onClick={() => scrollToSection('projects')}>
             View My Work
           </RainbowButton>
