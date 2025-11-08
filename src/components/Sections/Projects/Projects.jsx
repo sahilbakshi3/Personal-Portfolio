@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
 import ProjectCard from './ProjectCard';
+import ProjectModal from './ProjectModal';
 import Button from '../../common/Button/Button';
 import { projects } from '../../Data/Projects';
 
@@ -9,6 +10,8 @@ const Projects = () => {
   const [elementRef, isVisible] = useIntersectionObserver();
   const [filter, setFilter] = useState('all');
   const [visibleProjects, setVisibleProjects] = useState(6);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Get unique categories from projects
   const categories = ['all', ...new Set(projects.flatMap(project => project.tags))];
@@ -22,6 +25,18 @@ const Projects = () => {
 
   const handleLoadMore = () => {
     setVisibleProjects(prev => prev + 3);
+  };
+
+  const handleOpenModal = (project) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    document.body.style.overflow = 'unset';
+    setTimeout(() => setSelectedProject(null), 300);
   };
 
   return (
@@ -39,38 +54,20 @@ const Projects = () => {
               My <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Projects</span>
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-              Here's a showcase of projects I've worked on, ranging from web applications to electronics projects
+              Click any project to explore detailed features, technologies, and live demos
             </p>
-
-            {/* Filter Buttons */}
-            <div className="flex flex-wrap justify-center gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => {
-                    setFilter(category);
-                    setVisibleProjects(6);
-                  }}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    filter === category
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </button>
-              ))}
-            </div>
+          
           </div>
 
           {/* Projects Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {displayedProjects.map((project, index) => (
               <ProjectCard
                 key={project.id}
                 project={project}
                 index={index}
                 isVisible={isVisible}
+                onClick={() => handleOpenModal(project)}
               />
             ))}
           </div>
@@ -103,6 +100,13 @@ const Projects = () => {
           )}
         </div>
       </div>
+
+      {/* Project Modal */}
+      <ProjectModal
+        project={selectedProject}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </section>
   );
 };

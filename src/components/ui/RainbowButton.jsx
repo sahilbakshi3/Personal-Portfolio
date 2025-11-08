@@ -35,7 +35,7 @@ const RainbowButton = ({
       />
       
       {/* Inner content with black background */}
-      <span className="relative z-10 py-3.5 px-6 bg-black rounded-md flex items-center justify-center text-lg font-medium">
+      <span className="relative z-10 py-3.5 px-6 bg-white text-black dark:bg-black dark:text-white rounded-md flex items-center justify-center text-lg font-medium transition-colors">
         {children}
       </span>
       
