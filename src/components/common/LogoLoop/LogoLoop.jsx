@@ -10,9 +10,10 @@ const toCssLength = (v) => (typeof v === 'number' ? `${v}px` : (v ?? undefined))
 const cx = (...p) => p.filter(Boolean).join(' ');
 
 /**
- * Observe size changes on one or more refs and call `callback`.
+ * Observe size changes on up to two refs and call `callback`.
+ * (Array-literal safe deps: [callback, refA, refB])
  */
-const useResizeObserver = (callback, elements) => {
+const useResizeObserver = (callback, refA, refB) => {
   useEffect(() => {
     const hasRO = typeof window !== 'undefined' && 'ResizeObserver' in window;
 
@@ -23,7 +24,8 @@ const useResizeObserver = (callback, elements) => {
       return () => window.removeEventListener('resize', onResize);
     }
 
-    const observers = elements.map((ref) => {
+    const refs = [refA, refB].filter(Boolean);
+    const observers = refs.map((ref) => {
       const el = ref?.current;
       if (!el) return null;
       const obs = new ResizeObserver(() => callback());
@@ -36,8 +38,7 @@ const useResizeObserver = (callback, elements) => {
     return () => {
       observers.forEach((o) => o?.disconnect());
     };
-    // deps must be an array literal (no variable name), include the refs themselves
-  }, [callback, ...elements]);
+  }, [callback, refA, refB]);
 };
 
 /**
@@ -175,8 +176,8 @@ export const LogoLoop = memo(
       }
     }, []);
 
-    // Observe size changes of container & first sequence copy
-    useResizeObserver(updateDimensions, [containerRef, seqRef]);
+    // Observe size changes (array-literal-safe)
+    useResizeObserver(updateDimensions, containerRef, seqRef);
 
     // Re-run measurement when images inside first sequence copy load
     useImageLoader(seqRef, updateDimensions);
