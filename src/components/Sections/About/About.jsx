@@ -1,18 +1,58 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Download, MapPin, GraduationCap, Calendar, Code2, Briefcase } from 'lucide-react';
-import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
+import React, { useRef } from 'react';
+import { Download, MapPin, GraduationCap, Calendar, Code2, Briefcase, Sparkles, Heart, Trophy, Coffee } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-// import Button from '../../common/Button/Button'; // ❌ remove this
-import RainbowButton from '../../ui/RainbowButton.jsx'; // ✅ use the same button as Hero
-import { personalInfo } from '../../Data/PersonalInfo';
 
-// Timeline Component with scroll animations
+const personalInfo = {
+  name: 'Sahil Bakshi',
+  title: 'Full Stack Developer',
+  location: 'Indore, India',
+  email: 'sahilbakshi3@gmail.com',
+  bio: {
+    short: 'Building digital experiences that make a difference, one line of code at a time.',
+    long: `Welcome to my official portfolio website! I'm an aspiring Software Developer currently pursuing a degree in Electronics and Instrumentation Engineering. I'm passionate about building innovative web solutions and creating intuitive, user-friendly UI designs.
+           Beyond academics, I'm an avid traveler, foodie, and Formula 1 enthusiast. I enjoy exploring new technologies, constantly learning, and challenging myself to grow as a developer. My goal is to solve real-world problems through code, continuously refining my skills and embracing new opportunities along the way.
+           I'm always open to exciting challenges and collaborations that push me forward in my journey as a developer.`
+  },
+  interests: [
+    'Web Development',
+    'UI/UX Design',
+    'Formula 1',
+    'Travel',
+    'Food',
+    'Technology Innovation'
+  ],
+  education: {
+    degree: 'Bachelor of Engineering',
+    field: 'Electronics and Instrumentation',
+    institution: 'Shri G.S. Institute of Technology and Science',
+    year: 'Sep 2020 - May 2024',
+    location: 'Indore, India'
+  },
+  experience: [
+    {
+      title: 'Frontend Developer Intern',
+      company: 'Quantiphi Technologies Solutions Pvt. Ltd.',
+      duration: 'Feb 2024 - Aug 2024',
+      description: 'Developed responsive web applications using React and contributed to UI/UX improvements.',
+      technologies: ['React', 'JavaScript', 'CSS3', 'Git']
+    },
+    {
+      title: 'Software Developer',
+      company: 'Quantiphi Technologies Solutions Pvt. Ltd.',
+      duration: 'Aug 2024 - Jun 2025',
+      description: 'Developed and enhanced features in Dociphi, a GenAI-based document processing SaaS platform, contributing to a 3% reduction in operational costs through automation and efficiency improvements.',
+      technologies: ['React', 'JavaScript', 'CSS3', 'Python', 'Git']
+    }
+  ]
+};
+
+// Timeline Component (keeping your existing one)
 const Timeline = ({ data }) => {
   const ref = useRef(null);
   const containerRef = useRef(null);
-  const [height, setHeight] = useState(0);
+  const [height, setHeight] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (ref.current) {
       const rect = ref.current.getBoundingClientRect();
       setHeight(rect.height);
@@ -30,7 +70,6 @@ const Timeline = ({ data }) => {
   return (
     <div ref={containerRef} className="relative w-full overflow-clip">
       <div ref={ref} className="relative mx-auto max-w-7xl pb-20">
-        {/* Animated center vertical line */}
         <motion.div
           style={{ height: height + 'px' }}
           className="absolute left-[50%] top-0 hidden w-[2px] translate-x-[-50%] overflow-hidden bg-gradient-to-b from-transparent via-gray-200 to-transparent md:block dark:via-gray-800"
@@ -50,7 +89,6 @@ const Timeline = ({ data }) => {
             >
               {isLeft ? (
                 <>
-                  {/* Content on left */}
                   <motion.div 
                     className="md:text-right"
                     initial={{ opacity: 0, x: -50 }}
@@ -63,13 +101,11 @@ const Timeline = ({ data }) => {
                         <Calendar size={14} />
                         {item.title}
                       </div>
-                      <div className="rounded-2xl border border-gray-200/50 bg-white p-6 shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] transition-all hover:shadow-xl dark:border-gray-800/50 dark:bg-gray-900/50">
+                      <div className="rounded-2xl border border-gray-200/50 bg-white p-6 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50">
                         {item.content}
                       </div>
                     </div>
                   </motion.div>
-
-                  {/* Center dot */}
                   <div className="relative hidden md:block">
                     <motion.div 
                       className="sticky top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center"
@@ -81,16 +117,11 @@ const Timeline = ({ data }) => {
                       <div className="h-4 w-4 animate-pulse rounded-full border-4 border-blue-500 bg-white shadow-lg shadow-blue-500/50 dark:border-blue-400 dark:bg-gray-900" />
                     </motion.div>
                   </div>
-
-                  {/* Empty right */}
                   <div className="hidden md:block" />
                 </>
               ) : (
                 <>
-                  {/* Empty left */}
                   <div className="hidden md:block" />
-
-                  {/* Center dot */}
                   <div className="relative hidden md:block">
                     <motion.div 
                       className="sticky top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center"
@@ -102,8 +133,6 @@ const Timeline = ({ data }) => {
                       <div className="h-4 w-4 animate-pulse rounded-full border-4 border-purple-500 bg-white shadow-lg shadow-purple-500/50 dark:border-purple-400 dark:bg-gray-900" />
                     </motion.div>
                   </div>
-
-                  {/* Content on right */}
                   <motion.div
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -114,7 +143,7 @@ const Timeline = ({ data }) => {
                       <Calendar size={14} />
                       {item.title}
                     </div>
-                    <div className="rounded-2xl border border-gray-200/50 bg-white p-6 shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] transition-all hover:shadow-xl dark:border-gray-800/50 dark:bg-gray-900/50">
+                    <div className="rounded-2xl border border-gray-200/50 bg-white p-6 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50">
                       {item.content}
                     </div>
                   </motion.div>
@@ -129,8 +158,6 @@ const Timeline = ({ data }) => {
 };
 
 const About = () => {
-  const [elementRef, isVisible] = useIntersectionObserver();
-
   const timelineData = [
     {
       title: personalInfo.education.year,
@@ -174,97 +201,181 @@ const About = () => {
             </h3>
           </div>
           <p className="mb-4 text-sm font-medium text-purple-600 dark:text-purple-400">
-            {exp.company} {exp.location && `• ${exp.location}`}
+            {exp.company}
           </p>
           <p className="mb-6 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
             {exp.description}
           </p>
-
-            {exp.technologies && exp.technologies.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {exp.technologies.map((tech, i) => (
-                  <span
-                    key={i}
-                    className="rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-1 text-xs font-medium text-blue-700 dark:from-blue-900/30 dark:to-purple-900/30 dark:text-blue-300"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            )}
+          {exp.technologies && exp.technologies.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {exp.technologies.map((tech, i) => (
+                <span
+                  key={i}
+                  className="rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-1 text-xs font-medium text-blue-700 dark:from-blue-900/30 dark:to-purple-900/30 dark:text-blue-300"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       ),
     })),
   ];
 
   return (
-    <section id="about" className="relative overflow-hidden bg-white px-4 py-20 dark:bg-black">
-      {/* Background decoration */}
+    <section id="about" className="relative overflow-hidden bg-white dark:bg-black px-4 py-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-1/4 top-20 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl" />
         <div className="absolute bottom-20 right-1/4 h-96 w-96 rounded-full bg-purple-500/5 blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <div
-          ref={elementRef}
-          className={`transition-all duration-1000 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-          }`}
+        {/* Section Header */}
+        <motion.div 
+          className="mb-20 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
         >
-          {/* Section Header */}
-          <div className="mb-20 text-center">
-            <h2 className="mb-6 text-5xl font-bold text-gray-900 md:text-6xl dark:text-white">
-              About{' '}
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Me
-              </span>
-            </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400">
-              My journey as a developer, the experiences that shaped me, and what drives my passion for technology
-            </p>
-          </div>
+          <h2 className="mb-6 text-5xl font-bold text-gray-900 md:text-6xl dark:text-white">
+            About{' '}
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Me
+            </span>
+          </h2>
+          <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400">
+            My journey as a developer, the experiences that shaped me, and what drives my passion for technology
+          </p>
+        </motion.div>
 
-          {/* Profile + Bio */}
-          <div className="mb-20 grid gap-8 lg:grid-cols-3">
-            {/* ... (unchanged cards) ... */}
-            {/* Keeping the rest of your profile and bio cards unchanged */}
-            {/* paste your existing cards here; omitted for brevity */}
-          </div>
-
-          {/* Timeline */}
-          <div className="mb-12">
-            <div className="mb-12 text-center">
-              <h3 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
-                My{' '}
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Journey
-                </span>
-              </h3>
-              <p className="mx-auto max-w-2xl text-gray-600 dark:text-gray-400">
-                Education and professional experience that shaped my career
-              </p>
-            </div>
-            <Timeline data={timelineData} />
-          </div>
-
-          {/* CTA — RainbowButton (same as Hero) */}
+        {/* Profile Cards Grid */}
+        <div className="mb-20 grid gap-6 lg:grid-cols-3">
+          {/* Main Profile Card */}
           <motion.div 
-            className="text-center"
+            className="lg:col-span-2 rounded-2xl border border-gray-200/50 bg-white p-8 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="mb-6 flex items-start justify-between">
+              <div>
+                <h3 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
+                  {personalInfo.name}
+                </h3>
+                <p className="mb-4 text-lg font-medium text-blue-600 dark:text-blue-400">
+                  {personalInfo.title}
+                </p>
+                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                  <MapPin size={16} />
+                  <span>{personalInfo.location}</span>
+                </div>
+              </div>
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
+                <Code2 className="text-white" size={32} />
+              </div>
+            </div>
+
+            <p className="mb-6 leading-relaxed text-gray-700 dark:text-gray-300">
+              {personalInfo.bio.long}
+            </p>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-4 dark:from-blue-900/20 dark:to-blue-800/20">
+                <div className="mb-1 text-2xl font-bold text-blue-600 dark:text-blue-400">6+</div>
+                <div className="text-xs font-medium text-gray-600 dark:text-gray-400">Projects</div>
+              </div>
+              <div className="rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 p-4 dark:from-purple-900/20 dark:to-purple-800/20">
+                <div className="mb-1 text-2xl font-bold text-purple-600 dark:text-purple-400">1+</div>
+                <div className="text-xs font-medium text-gray-600 dark:text-gray-400">Years Exp.</div>
+              </div>
+              <div className="rounded-xl bg-gradient-to-br from-pink-50 to-pink-100 p-4 dark:from-pink-900/20 dark:to-pink-800/20">
+                <div className="mb-1 text-2xl font-bold text-pink-600 dark:text-pink-400">10+</div>
+                <div className="text-xs font-medium text-gray-600 dark:text-gray-400">Technologies</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Interests Card */}
+          <motion.div 
+            className="rounded-2xl border border-gray-200/50 bg-white p-8 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <div className="mb-6 flex items-center gap-2">
+              <Sparkles className="text-blue-600 dark:text-blue-400" size={24} />
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Interests & Hobbies</h3>
+            </div>
+            <div className="space-y-3">
+              {personalInfo.interests.map((interest, i) => (
+                <div 
+                  key={i}
+                  className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 p-3 dark:from-gray-800/50 dark:to-gray-800/30"
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
+                    {i === 0 && <Code2 size={16} className="text-white" />}
+                    {i === 1 && <Sparkles size={16} className="text-white" />}
+                    {i === 2 && <Trophy size={16} className="text-white" />}
+                    {i === 3 && <MapPin size={16} className="text-white" />}
+                    {i === 4 && <Coffee size={16} className="text-white" />}
+                    {i === 5 && <Heart size={16} className="text-white" />}
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {interest}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Timeline Section */}
+        <div className="mb-12">
+          <motion.div 
+            className="mb-12 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
           >
-            <RainbowButton
-              onClick={() => window.open('/RESUME.pdf', '_blank', 'noopener,noreferrer')}
-              className="group"
-            >
-              {/* <Download size={20} className="mr-2 transition-transform group-hover:translate-y-[-2px]" /> */}
-              Download Resume
-            </RainbowButton>
+            <h3 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
+              My{' '}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Journey
+              </span>
+            </h3>
+            <p className="mx-auto max-w-2xl text-gray-600 dark:text-gray-400">
+              Education and professional experience that shaped my career
+            </p>
           </motion.div>
+          <Timeline data={timelineData} />
         </div>
+
+        {/* CTA */}
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <button className="relative inline-block overflow-hidden rounded-lg p-0.5">
+            <div className="absolute top-0 left-0 w-[200%] h-full animate-[rainbow-slide_0.75s_linear_infinite]"
+                 style={{
+                   background: 'linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b)',
+                   backgroundSize: '50% 100%'
+                 }} />
+            <span className="relative z-10 flex items-center gap-2 rounded-md bg-white px-6 py-3.5 text-lg font-medium text-black dark:bg-black dark:text-white">
+              <Download size={20} />
+              Download Resume
+            </span>
+          </button>
+        </motion.div>
       </div>
     </section>
   );
