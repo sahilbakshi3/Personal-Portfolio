@@ -1,16 +1,13 @@
-// src/components/Sections/Projects/ProjectCard.jsx
 import React, { useState } from 'react';
-import { Star, Code2, Sparkles } from 'lucide-react';
+import { Code2 } from 'lucide-react';
 
 const ProjectCard = ({ project, index, isVisible, onClick }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  const { title, description, image, tags, featured } = project;
+  const { title, description, image, tags } = project;
 
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-  };
+  const handleImageLoad = () => setImageLoaded(true);
 
   const handleImageError = () => {
     setImageError(true);
@@ -27,15 +24,14 @@ const ProjectCard = ({ project, index, isVisible, onClick }) => {
     >
       {/* Card Container */}
       <div className="relative bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 transition-all duration-500 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1">
-        
         {/* Image Container */}
         <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 overflow-hidden">
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
             </div>
           )}
-          
+
           {!imageError ? (
             <img
               src={image}
@@ -51,18 +47,9 @@ const ProjectCard = ({ project, index, isVisible, onClick }) => {
               <Code2 size={48} className="text-gray-400" />
             </div>
           )}
-          
+
           {/* Subtle Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
-          {/* Featured Badge */}
-          {/* {featured && (
-            <div className="absolute top-3 right-3">
-              <div className="bg-yellow-400 text-gray-900 p-1.5 rounded-full shadow-lg">
-                <Star size={14} fill="currentColor" />
-              </div>
-            </div>
-          )} */}
         </div>
 
         {/* Content */}
@@ -70,7 +57,7 @@ const ProjectCard = ({ project, index, isVisible, onClick }) => {
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
             {title}
           </h3>
-          
+
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">
             {description}
           </p>

@@ -5,7 +5,7 @@ import LogoLoop from '../../common/LogoLoop/LogoLoop';
 import { useTheme } from '../../../context/ThemeContext';
 
 /* flatten to { lowerName: { name, icon, color } } */
-const flattenSkills = (byCat) => {
+const flattenSkills = byCat => {
   const map = new Map();
   byCat.forEach(cat => {
     cat.items.forEach(item => {
@@ -20,42 +20,45 @@ const flattenSkills = (byCat) => {
 
 /* alias map so your order keys match data */
 const NAME_ALIASES = {
-  'tailwindcss': 'Tailwind CSS',
+  tailwindcss: 'Tailwind CSS',
   'tailwind css': 'Tailwind CSS',
-  'github': 'Git & GitHub',
-  'git': 'Git & GitHub',
-  'rest': 'REST APIs',
+  github: 'Git & GitHub',
+  git: 'Git & GitHub',
+  rest: 'REST APIs',
   'rest apis': 'REST APIs',
-  'typescript': 'TypeScript',
-  'javascript': 'JavaScript',
+  typescript: 'TypeScript',
+  javascript: 'JavaScript',
   'next.js': 'Next.js',
   'node.js': 'Node.js',
-  'postgres': 'PostgreSQL',
-  'postgresql': 'PostgreSQL',
-  'shadcn': 'shadcn/ui',
-  'vercel': 'Vercel',
+  postgres: 'PostgreSQL',
+  postgresql: 'PostgreSQL',
+  shadcn: 'shadcn/ui',
+  vercel: 'Vercel',
 };
-const resolveName = (n) => NAME_ALIASES[n.toLowerCase()] ?? n;
+const resolveName = n => NAME_ALIASES[n.toLowerCase()] ?? n;
 
 const Skills = () => {
   const [elementRef, isVisible] = useIntersectionObserver();
   const { isDarkMode } = useTheme();
 
-  // order shown in the loop
-  const featuredOrder = [
-    'React',
-    'Next.js',
-    'TypeScript',
-    'TailwindCSS',
-    'JavaScript',
-    'Node.js',
-    'Express',
-    'MongoDB',
-    'PostgreSQL',
-    'Docker',
-    'GitHub',
-    'Firebase',
-  ];
+  // Memoize the order list so it doesn't trigger useMemo deps every render
+  const featuredOrder = useMemo(
+    () => [
+      'React',
+      'Next.js',
+      'TypeScript',
+      'TailwindCSS',
+      'JavaScript',
+      'Node.js',
+      'Express',
+      'MongoDB',
+      'PostgreSQL',
+      'Docker',
+      'GitHub',
+      'Firebase',
+    ],
+    []
+  );
 
   const loopLogos = useMemo(() => {
     const flat = flattenSkills(skillsByCategory);
@@ -68,11 +71,7 @@ const Skills = () => {
         return {
           node: (
             <span className="inline-flex items-center justify-center select-none" aria-hidden="true">
-              <Icon
-                size={56}
-                className="transition-transform duration-300"
-                style={{ color: 'currentColor' }}
-              />
+              <Icon size={56} className="transition-transform duration-300" style={{ color: 'currentColor' }} />
             </span>
           ),
           title: s.name,
@@ -80,7 +79,7 @@ const Skills = () => {
         };
       })
       .filter(Boolean);
-  }, [featuredOrder]);
+  }, [featuredOrder]); // featuredOrder is stable due to useMemo([])
 
   return (
     <section
@@ -95,7 +94,9 @@ const Skills = () => {
       <div className="max-w-6xl mx-auto">
         <div
           ref={elementRef}
-          className={`transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}
+          className={`transition-all duration-700 ease-out ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
+          }`}
         >
           <div className="flex items-center mb-6">
             <div className="w-1 h-6 rounded-full mr-3 bg-gradient-to-b from-blue-600 to-purple-600" />
