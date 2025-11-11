@@ -77,11 +77,11 @@ const Header = () => {
               className="flex items-center space-x-3 cursor-pointer group"
               aria-label="Go to Home"
             >
-              <img
+              {/* <img
                 src={logo}
                 alt="Sahil Bakshi logo"
                 className="w-10 h-10 rounded-full object-cover transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
-              />
+              /> */}
               <span className="sr-only">Home</span>
             </a>
 

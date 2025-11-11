@@ -364,17 +364,26 @@ const About = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <button className="relative inline-block overflow-hidden rounded-lg p-0.5">
-            <div className="absolute top-0 left-0 w-[200%] h-full animate-[rainbow-slide_0.75s_linear_infinite]"
-                 style={{
-                   background: 'linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b)',
-                   backgroundSize: '50% 100%'
-                 }} />
-            <span className="relative z-10 flex items-center gap-2 rounded-md bg-white px-6 py-3.5 text-lg font-medium text-black dark:bg-black dark:text-white">
-              <Download size={20} />
-              Download Resume
-            </span>
-          </button>
+          <a
+            href='/RESUME.pdf'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='relative inline-block overflow-hidden rounded-lg p-0.5'
+          
+          >
+
+            <button className="relative inline-block overflow-hidden rounded-lg p-0.5">
+              <div className="absolute top-0 left-0 w-[200%] h-full animate-[rainbow-slide_0.75s_linear_infinite]"
+                  style={{
+                    background: 'linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b)',
+                    backgroundSize: '50% 100%'
+                  }} />
+              <span className="relative z-10 flex items-center gap-2 rounded-md bg-white px-6 py-3.5 text-lg font-medium text-black dark:bg-black dark:text-white">
+                <Download size={20} />
+                Download Resume
+              </span>
+            </button>
+          </a>
         </motion.div>
       </div>
     </section>
