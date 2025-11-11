@@ -175,10 +175,6 @@ const Hero = () => {
           </RainbowButton>
         </div>
       </div>
-
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
-        <ChevronDown size={32} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} />
-      </div>
     </section>
   );
 };

@@ -1,13 +1,11 @@
-export const personalInfo = {
+ export const personalInfo = {
   name: 'Sahil Bakshi',
   title: 'Full Stack Developer',
   location: 'Indore, India',
   email: 'sahilbakshi3@gmail.com',
-  // phone: '+91-88270-69714',
-  
   bio: {
     short: 'Building digital experiences that make a difference, one line of code at a time.',
-    long: `Welcome to my official portfolio website! I'm an aspiring Software Developer currently pursuing a degree in Electronics and Instrumentation Engineering. I’m passionate about building innovative web solutions and creating intuitive, user-friendly UI designs.
+    long: `Welcome to my official portfolio website! I'm an aspiring Software Developer currently pursuing a degree in Electronics and Instrumentation Engineering. I'm passionate about building innovative web solutions and creating intuitive, user-friendly UI designs.
            Beyond academics, I'm an avid traveler, foodie, and Formula 1 enthusiast. I enjoy exploring new technologies, constantly learning, and challenging myself to grow as a developer. My goal is to solve real-world problems through code, continuously refining my skills and embracing new opportunities along the way.
            I'm always open to exciting challenges and collaborations that push me forward in my journey as a developer.`
   },
@@ -25,7 +23,6 @@ export const personalInfo = {
     'Food',
     'Technology Innovation'
   ],
-
   education: {
     degree: 'Bachelor of Engineering',
     field: 'Electronics and Instrumentation',
@@ -33,7 +30,6 @@ export const personalInfo = {
     year: 'Sep 2020 - May 2024',
     location: 'Indore, India'
   },
-
   experience: [
     {
       title: 'Frontend Developer Intern',
@@ -51,4 +47,3 @@ export const personalInfo = {
     }
   ]
 };
-

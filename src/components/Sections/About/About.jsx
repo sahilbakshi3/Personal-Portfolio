@@ -1,50 +1,7 @@
 import React, { useRef } from 'react';
 import { Download, MapPin, GraduationCap, Calendar, Code2, Briefcase, Sparkles, Heart, Trophy, Coffee } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-
-const personalInfo = {
-  name: 'Sahil Bakshi',
-  title: 'Full Stack Developer',
-  location: 'Indore, India',
-  email: 'sahilbakshi3@gmail.com',
-  bio: {
-    short: 'Building digital experiences that make a difference, one line of code at a time.',
-    long: `Welcome to my official portfolio website! I'm an aspiring Software Developer currently pursuing a degree in Electronics and Instrumentation Engineering. I'm passionate about building innovative web solutions and creating intuitive, user-friendly UI designs.
-           Beyond academics, I'm an avid traveler, foodie, and Formula 1 enthusiast. I enjoy exploring new technologies, constantly learning, and challenging myself to grow as a developer. My goal is to solve real-world problems through code, continuously refining my skills and embracing new opportunities along the way.
-           I'm always open to exciting challenges and collaborations that push me forward in my journey as a developer.`
-  },
-  interests: [
-    'Web Development',
-    'UI/UX Design',
-    'Formula 1',
-    'Travel',
-    'Food',
-    'Technology Innovation'
-  ],
-  education: {
-    degree: 'Bachelor of Engineering',
-    field: 'Electronics and Instrumentation',
-    institution: 'Shri G.S. Institute of Technology and Science',
-    year: 'Sep 2020 - May 2024',
-    location: 'Indore, India'
-  },
-  experience: [
-    {
-      title: 'Frontend Developer Intern',
-      company: 'Quantiphi Technologies Solutions Pvt. Ltd.',
-      duration: 'Feb 2024 - Aug 2024',
-      description: 'Developed responsive web applications using React and contributed to UI/UX improvements.',
-      technologies: ['React', 'JavaScript', 'CSS3', 'Git']
-    },
-    {
-      title: 'Software Developer',
-      company: 'Quantiphi Technologies Solutions Pvt. Ltd.',
-      duration: 'Aug 2024 - Jun 2025',
-      description: 'Developed and enhanced features in Dociphi, a GenAI-based document processing SaaS platform, contributing to a 3% reduction in operational costs through automation and efficiency improvements.',
-      technologies: ['React', 'JavaScript', 'CSS3', 'Python', 'Git']
-    }
-  ]
-};
+import { personalInfo } from '../../Data/PersonalInfo';
 
 // Timeline Component (keeping your existing one)
 const Timeline = ({ data }) => {
@@ -97,7 +54,7 @@ const Timeline = ({ data }) => {
                     transition={{ duration: 0.5, delay: 0.2 }}
                   >
                     <div className="inline-block text-left">
-                      <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 dark:from-blue-900/30 dark:to-purple-900/30 dark:text-blue-300">
+                      <div className="mb-4 flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 dark:from-blue-900/30 dark:to-purple-900/30 dark:text-blue-300">
                         <Calendar size={14} />
                         {item.title}
                       </div>
@@ -139,9 +96,9 @@ const Timeline = ({ data }) => {
                     viewport={{ once: true, margin: '-100px' }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                   >
-                    <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-purple-700 dark:from-purple-900/30 dark:to-pink-900/30 dark:text-purple-300">
+                    <div className="mb-4 flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-purple-700 dark:from-purple-900/30 dark:to-pink-900/30 dark:text-purple-300">
                       <Calendar size={14} />
-                      {item.title}
+                      <span className='items-center'>{item.title}</span>
                     </div>
                     <div className="rounded-2xl border border-gray-200/50 bg-white p-6 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50">
                       {item.content}
@@ -164,25 +121,25 @@ const About = () => {
       type: 'education',
       content: (
         <div>
-          <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
-              <GraduationCap className="text-white" size={20} />
+          <div className="mb-4 flex items-start gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg">
+              <GraduationCap className="text-white" size={24} />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-              {personalInfo.education.degree}
-            </h3>
+            <div className="min-w-0 flex-1">
+              <h3 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">
+                {personalInfo.education.degree}
+              </h3>
+              <p className="mb-2 text-sm font-medium text-blue-600 dark:text-blue-400">
+                {personalInfo.education.institution}
+              </p>
+            </div>
           </div>
-          <p className="mb-2 font-semibold text-blue-600 dark:text-blue-400">
+          <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
             {personalInfo.education.field}
           </p>
-          <p className="mb-4 text-sm font-medium text-gray-600 dark:text-gray-400">
-            {personalInfo.education.institution}
-          </p>
-          <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-500">
-            <span className="flex items-center gap-1">
-              <MapPin size={12} />
-              {personalInfo.education.location}
-            </span>
+          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500">
+            <MapPin size={12} />
+            <span>{personalInfo.education.location}</span>
           </div>
         </div>
       ),
@@ -192,17 +149,19 @@ const About = () => {
       type: 'experience',
       content: (
         <div>
-          <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
-              <Briefcase className="text-white" size={20} />
+          <div className="mb-4 flex items-start gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg">
+              <Briefcase className="text-white" size={24} />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-              {exp.title}
-            </h3>
+            <div className="min-w-0 flex-1">
+              <h3 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">
+                {exp.title}
+              </h3>
+              <p className="mb-2 text-sm font-medium text-purple-600 dark:text-purple-400">
+                {exp.company}
+              </p>
+            </div>
           </div>
-          <p className="mb-4 text-sm font-medium text-purple-600 dark:text-purple-400">
-            {exp.company}
-          </p>
           <p className="mb-6 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
             {exp.description}
           </p>
