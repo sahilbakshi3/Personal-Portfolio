@@ -6,6 +6,7 @@ import SplashScreen from './components/common/SplashScreen/SplashScreen';
 // import SplashCursor from './components/common/SplashCursor/SplashCursor';
 import './app.css';
 import SocialLinks from './components/common/SocialLinks/SocialLinks';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Lazy load heavy components
 const Hero = lazy(() => import('./components/Sections/Hero/Hero'));
@@ -74,9 +75,14 @@ function AppContent() {
 
 function App() {
   return (
+    <>
     <ThemeProvider>
       <AppContent />
     </ThemeProvider>
+
+    <SpeedInsights />
+
+    </>
   );
 }
 
