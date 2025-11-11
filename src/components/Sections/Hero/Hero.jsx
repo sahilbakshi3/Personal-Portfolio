@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { useTheme } from '../../../context/ThemeContext';
 import Aurora from '../../ui/Aurora.jsx';
 import RainbowButton from '../../ui/RainbowButton.jsx';
