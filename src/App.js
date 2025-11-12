@@ -3,10 +3,10 @@ import React, { lazy, Suspense, useState } from 'react';
 import Header from './components/Layout/Header/Header';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import SplashScreen from './components/common/SplashScreen/SplashScreen';
-// import SplashCursor from './components/common/SplashCursor/SplashCursor';
 import './app.css';
 import SocialLinks from './components/common/SocialLinks/SocialLinks';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { SmoothCursor } from './components/ui/SmoothCursor';
 
 // Lazy load heavy components
 const Hero = lazy(() => import('./components/Sections/Hero/Hero'));
@@ -38,18 +38,6 @@ function AppContent() {
     <div className={`App min-h-screen transition-colors duration-300 ${
       isDarkMode ? 'bg-black text-white' : 'bg-white text-gray-900'
     }`}>
-      {/* Add SplashCursor component */}
-      {/* <SplashCursor 
-        DENSITY_DISSIPATION={3.5}
-        VELOCITY_DISSIPATION={2}
-        PRESSURE={0.1}
-        CURL={3}
-        SPLAT_RADIUS={0.2}
-        SPLAT_FORCE={6000}
-        COLOR_UPDATE_SPEED={10}
-        TRANSPARENT={true}
-      /> */}
-      
       <Header />
       <main>
         <Suspense fallback={<SectionLoader />}>
@@ -76,6 +64,7 @@ function AppContent() {
 function App() {
   return (
     <>
+    <SmoothCursor/>
     <ThemeProvider>
       <AppContent />
     </ThemeProvider>
