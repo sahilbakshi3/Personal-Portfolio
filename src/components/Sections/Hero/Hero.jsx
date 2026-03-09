@@ -1,179 +1,136 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { useTheme } from '../../../context/ThemeContext';
-import Aurora from '../../ui/Aurora.jsx';
-import RainbowButton from '../../ui/RainbowButton.jsx';
-import GradientText from '../../ui/GradientText.jsx';
-import LightGlassBackground from '../../ui/LightGlassBackground.jsx'; // <-- NEW
+// src/components/Sections/Hero/Hero.jsx
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
+import { motion } from "framer-motion";
 
 const Hero = () => {
-  const { isDarkMode } = useTheme();
-  const [displayText, setDisplayText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isScrambling, setIsScrambling] = useState(false);
-  const canvasRef = useRef(null);
-  const intervalRef = useRef(null);
+  const [displayText, setDisplayText] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
   const timeoutRef = useRef(null);
 
-  const roles = useMemo(() => [
-    'Web Developer',
-    'UI/UX Designer',
-    'Electronics Engineer',
-    'Problem Solver'
-  ], []);
+  const roles = useMemo(
+    () => [
+      "Web Developer",
+      "UI/UX Designer",
+      "React Specialist",
+      "Problem Solver",
+    ],
+    [],
+  );
 
-  const scrambleChars = '!@#$%^&*()_+-=[]{}|;:,.<>?~`';
-
-  const getRandomChar = useCallback(() => {
-    return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-  }, [scrambleChars]);
-
-  const animateToText = useCallback((targetText) => {
-    setIsScrambling(true);
-    let iteration = 0;
-    const maxIterations = 30;
-
-    if (intervalRef.current) clearInterval(intervalRef.current);
-
-    intervalRef.current = setInterval(() => {
-      const scrambledText = Array.from(targetText, (char, i) =>
-        iteration > i * 2 ? char : getRandomChar()
-      ).join('');
-
-      setDisplayText(scrambledText);
-      iteration++;
-
-      if (iteration >= maxIterations) {
-        clearInterval(intervalRef.current);
-        setDisplayText(targetText);
-        setIsScrambling(false);
-
+  useEffect(() => {
+    const word = roles[roleIndex];
+    if (!deleting) {
+      if (charIndex < word.length) {
         timeoutRef.current = setTimeout(() => {
-          setCurrentIndex((prev) => (prev + 1) % roles.length);
-        }, 2000);
+          setDisplayText(word.slice(0, charIndex + 1));
+          setCharIndex((c) => c + 1);
+        }, 90);
+      } else {
+        timeoutRef.current = setTimeout(() => setDeleting(true), 1800);
       }
-    }, 80);
-  }, [getRandomChar, roles.length]);
+    } else {
+      if (charIndex > 0) {
+        timeoutRef.current = setTimeout(() => {
+          setDisplayText(word.slice(0, charIndex - 1));
+          setCharIndex((c) => c - 1);
+        }, 55);
+      } else {
+        setDeleting(false);
+        setRoleIndex((i) => (i + 1) % roles.length);
+      }
+    }
+    return () => clearTimeout(timeoutRef.current);
+  }, [charIndex, deleting, roleIndex, roles]);
 
-  useEffect(() => {
-    const currentRole = roles[currentIndex];
-
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    const startDelay = setTimeout(() => {
-      animateToText(currentRole);
-    }, 100);
-
-    return () => {
-      clearTimeout(startDelay);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, [currentIndex, roles, animateToText]);
-
-  // We keep the effect for canvas only if you still want it elsewhere.
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    if (isDarkMode) return;
-
-    const ctx = canvas.getContext('2d', { alpha: false });
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    };
-
-    resize();
-    window.addEventListener('resize', resize);
-    return () => window.removeEventListener('resize', resize);
-  }, [isDarkMode]);
-
-  const scrollToSection = useCallback((sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) element.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = useCallback((id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }, []);
+
+  const container = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.12 } },
+  };
+  const item = {
+    hidden: { opacity: 0, y: 28 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
 
   return (
     <section
       id="home"
-      className={`pt-20 min-h-screen flex items-center justify-center relative overflow-hidden ${
-        isDarkMode ? 'bg-black' : 'bg-white'
-      }`}
+      className="min-h-screen flex flex-col justify-end px-16 pb-20 border-b border-black/10 relative overflow-hidden bg-paper"
     >
-      {/* Light mode glassmorphism background */}
-      {!isDarkMode && (
-        <LightGlassBackground />
-      )}
+      {/* Subtle grain texture overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundSize: "128px",
+        }}
+      />
 
-      {/* Dark mode aurora (WebGL) */}
-      {isDarkMode && (
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <Aurora
-            colorStops={['#ee7752', '#e73c7e', '#23a6d5', '#23d5ab']}
-            amplitude={1.0}
-            blend={0.6}
-            speed={1.0}
-          />
-        </div>
-      )}
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 max-w-7xl"
+      >
+        {/* Eyebrow */}
+        <motion.p
+          variants={item}
+          className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink3 mb-8 flex items-center gap-4"
+        >
+          <span className="block w-8 h-px bg-ink3" />
+          Full Stack Developer &amp; Designer — Indore, India
+        </motion.p>
 
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-        <div className="p-8 md:p-12">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className={`block mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-              Hi, I'm
-            </span>
+        {/* Name */}
+        <motion.h1
+          variants={item}
+          className="font-display font-light leading-[0.9] tracking-tight text-ink mb-0"
+          style={{ fontSize: "clamp(72px, 11vw, 152px)" }}
+        >
+          Sahil
+          <br />
+          <em className="not-italic" style={{ fontStyle: "italic" }}>
+            Bakshi
+          </em>
+        </motion.h1>
 
-            {/* Animated gradient name (light & dark) */}
-            <GradientText
-              className="clip-text text-4xl md:text-6xl lg:text-7xl leading-tight"
-              colors={['#40ffaa', '#4079ff', '#40ffaa', '#4079ff', '#40ffaa']}
-              animationSpeed={8}
-              showBorder={false}
-            >
-              Sahil Bakshi
-            </GradientText>
-          </h1>
-
-          <div className="h-16 mb-8">
-            <p className={`text-xl md:text-3xl ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-              I'm a{' '}
-              <span className="font-mono font-semibold relative">
-                {displayText.split('').map((char, index) => (
-                  <span
-                    key={index}
-                    className={`inline-block transition-all duration-100 ${
-                      isScrambling && Math.random() > 0.7
-                        ? `${isDarkMode ? 'text-blue-400' : 'text-blue-600'} animate-pulse transform scale-110`
-                        : isDarkMode
-                        ? 'text-blue-400'
-                        : 'text-blue-600'
-                    }`}
-                  >
-                    {char === ' ' ? '\u00A0' : char}
-                  </span>
-                ))}
-                <span className={`animate-pulse ml-1 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>|</span>
-              </span>
-            </p>
-          </div>
-
-          <p
-            className={`text-lg md:text-xl mb-10 max-w-3xl mx-auto leading-relaxed ${
-              isDarkMode ? 'text-gray-300' : 'text-gray-700'
-            }`}
-          >
-            Building digital experiences that make a difference, one line of code at a time.
+        {/* Divider row */}
+        <motion.div
+          variants={item}
+          className="flex items-end justify-between mt-12 pt-8 border-t border-black/10 gap-8"
+        >
+          {/* Typewriter */}
+          <p className="font-mono text-sm tracking-wide text-ink2">
+            Currently —&nbsp;
+            <span className="text-ink">{displayText}</span>
+            <span className="animate-blink ml-0.5 text-ink font-light">_</span>
           </p>
 
-          <RainbowButton onClick={() => scrollToSection('projects')}>
-            View My Work
-          </RainbowButton>
-        </div>
-      </div>
+          {/* CTA */}
+          <button
+            onClick={() => scrollTo("projects")}
+            className="font-mono text-[11px] tracking-[0.14em] uppercase text-ink3 hover:text-ink transition-colors duration-200 flex items-center gap-3 shrink-0"
+          >
+            View Work
+            <span className="block w-8 h-px bg-current" />
+          </button>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

@@ -1,126 +1,83 @@
-import React, { useMemo } from 'react';
-import { useIntersectionObserver } from '../../Hooks/useIntersectionObserver';
-import { skills as skillsByCategory } from '../../Data/Skills';
-import LogoLoop from '../../common/LogoLoop/LogoLoop';
-import { useTheme } from '../../../context/ThemeContext';
+// src/components/Sections/Skills/Skills.jsx
+import React from "react";
+import { useReveal } from "../../Hooks/useReveal";
+import { skills as skillsByCategory } from "../../Data/Skills";
 
-/* flatten to { lowerName: { name, icon, color } } */
-const flattenSkills = byCat => {
-  const map = new Map();
-  byCat.forEach(cat => {
-    cat.items.forEach(item => {
-      map.set(item.name.toLowerCase(), {
-        ...item,
-        color: item.color ?? cat.color ?? '#9ca3af',
-      });
-    });
-  });
-  return map;
-};
-
-/* alias map so your order keys match data */
-const NAME_ALIASES = {
-  tailwindcss: 'Tailwind CSS',
-  'tailwind css': 'Tailwind CSS',
-  github: 'Git & GitHub',
-  git: 'Git & GitHub',
-  rest: 'REST APIs',
-  'rest apis': 'REST APIs',
-  typescript: 'TypeScript',
-  javascript: 'JavaScript',
-  'next.js': 'Next.js',
-  'node.js': 'Node.js',
-  postgres: 'PostgreSQL',
-  postgresql: 'PostgreSQL',
-  shadcn: 'shadcn/ui',
-  vercel: 'Vercel',
-};
-const resolveName = n => NAME_ALIASES[n.toLowerCase()] ?? n;
+const SectionLabel = ({ index, children }) => (
+  <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink3 mb-20 flex items-center gap-3">
+    <span>{index} —</span>
+    <span>{children}</span>
+  </p>
+);
 
 const Skills = () => {
-  const [elementRef, isVisible] = useIntersectionObserver();
-  const { isDarkMode } = useTheme();
-
-  // Memoize the order list so it doesn't trigger useMemo deps every render
-  const featuredOrder = useMemo(
-    () => [
-      'React',
-      'Next.js',
-      'TypeScript',
-      'TailwindCSS',
-      'JavaScript',
-      'Node.js',
-      'Express',
-      'MongoDB',
-      'PostgreSQL',
-      'Docker',
-      'GitHub',
-      'Firebase',
-    ],
-    []
-  );
-
-  const loopLogos = useMemo(() => {
-    const flat = flattenSkills(skillsByCategory);
-    return featuredOrder
-      .map(raw => {
-        const name = resolveName(raw);
-        const s = flat.get(name.toLowerCase());
-        if (!s || !s.icon) return null;
-        const Icon = s.icon;
-        return {
-          node: (
-            <span className="inline-flex items-center justify-center select-none" aria-hidden="true">
-              <Icon size={56} className="transition-transform duration-300" style={{ color: 'currentColor' }} />
-            </span>
-          ),
-          title: s.name,
-          ariaLabel: s.name,
-        };
-      })
-      .filter(Boolean);
-  }, [featuredOrder]); // featuredOrder is stable due to useMemo([])
+  const [ref, visible] = useReveal();
 
   return (
     <section
       id="skills"
-      className={`
-        relative overflow-hidden
-        bg-gray-50 dark:bg-[#090611]
-        py-24 md:py-32
-        px-4
-      `}
+      className="px-16 py-32 border-b border-black/10 bg-paper2"
     >
-      <div className="max-w-6xl mx-auto">
-        <div
-          ref={elementRef}
-          className={`transition-all duration-700 ease-out ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
-          }`}
-        >
-          <div className="flex items-center mb-6">
-            <div className="w-1 h-6 rounded-full mr-3 bg-gradient-to-b from-blue-600 to-purple-600" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Featured Stack</h3>
-            <div className="flex-1 h-px ml-4 bg-gradient-to-r from-blue-600/30 to-purple-600/30" />
-          </div>
+      <div className="max-w-7xl mx-auto">
+        <SectionLabel index="03">Skills</SectionLabel>
 
-          <LogoLoop
-            logos={loopLogos}
-            speed={95}
-            direction="left"
-            logoHeight={64}
-            gap={72}
-            pauseOnHover
-            fadeOut
-            fadeOutColor={isDarkMode ? '#090611' : '#ffffff'}
-            fadeWidth="56px"
-            scaleOnHover={false}
-            className={`
-              bg-transparent border-0 shadow-none
-              text-neutral-700 dark:text-neutral-300
-              py-6
-            `}
-          />
+        <h2
+          className="font-display font-light text-ink mb-16 leading-[0.95]"
+          style={{ fontSize: "clamp(48px, 7vw, 88px)" }}
+        >
+          What I<br />
+          <em>work with</em>
+        </h2>
+
+        <div
+          ref={ref}
+          className={`
+            grid grid-cols-1 md:grid-cols-3 border border-black/10
+            transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+            ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}
+          `}
+        >
+          {skillsByCategory.map((cat, ci) => (
+            <div
+              key={cat.category}
+              className="p-14 md:border-r border-black/10 last:border-r-0 border-b md:border-b-0 last:border-b-0"
+              style={{ transitionDelay: `${ci * 80}ms` }}
+            >
+              {/* Category label */}
+              <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink3 mb-10 pb-5 border-b border-black/10">
+                {cat.category}
+              </p>
+
+              {/* Skill list */}
+              <ul className="flex flex-col">
+                {cat.items.map((skill, si) => (
+                  <li
+                    key={skill.name}
+                    className="
+                      font-display font-light text-[22px] text-ink
+                      py-4 border-b border-black/10 last:border-b-0
+                      flex items-center justify-between
+                      group cursor-default
+                      transition-colors duration-200 hover:text-ink3
+                    "
+                    style={{ transitionDelay: `${(ci * 6 + si) * 30}ms` }}
+                  >
+                    {skill.name}
+                    <span
+                      className="
+                      text-xs text-ink3 font-body
+                      opacity-0 -translate-x-1
+                      group-hover:opacity-100 group-hover:translate-x-0
+                      transition-all duration-200
+                    "
+                    >
+                      ↗
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </section>

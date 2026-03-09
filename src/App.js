@@ -1,77 +1,49 @@
 // src/App.js
-import React, { lazy, Suspense, useState } from 'react';
-import Header from './components/Layout/Header/Header';
-import { ThemeProvider, useTheme } from './context/ThemeContext';
-import SplashScreen from './components/common/SplashScreen/SplashScreen';
-import './app.css';
-import SocialLinks from './components/common/SocialLinks/SocialLinks';
-import { SpeedInsights } from '@vercel/speed-insights/react';
-import { SmoothCursor } from './components/ui/SmoothCursor';
+import React, { lazy, Suspense } from "react";
+import { ThemeProvider } from "./context/ThemeContext";
+import Header from "./components/Layout/Header/Header";
+import SocialLinks from "./components/common/SocialLinks/SocialLinks";
+import Cursor from "./components/ui/Cursor";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import "./app.css";
 
-// Lazy load heavy components
-const Hero = lazy(() => import('./components/Sections/Hero/Hero'));
-const About = lazy(() => import('./components/Sections/About/About'));
-const Skills = lazy(() => import('./components/Sections/Skills/Skills'));
-const Projects = lazy(() => import('./components/Sections/Projects/Projects'));
+const Hero = lazy(() => import("./components/Sections/Hero/Hero"));
+const About = lazy(() => import("./components/Sections/About/About"));
+const Skills = lazy(() => import("./components/Sections/Skills/Skills"));
+const Projects = lazy(() => import("./components/Sections/Projects/Projects"));
 
-// Loading component for better UX
-const SectionLoader = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+const Loader = () => (
+  <div className="flex items-center justify-center min-h-screen bg-paper">
+    <span className="font-mono text-xs tracking-widest text-ink3 uppercase animate-pulse">
+      Loading…
+    </span>
   </div>
 );
 
-function AppContent() {
-  const { isDarkMode } = useTheme();
-  const [showSplash, setShowSplash] = useState(true);
-
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-  };
-
-  // Show splash screen on every load
-  if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />;
-  }
-
-  return (
-    <div className={`App min-h-screen transition-colors duration-300 ${
-      isDarkMode ? 'bg-black text-white' : 'bg-white text-gray-900'
-    }`}>
-      <Header />
-      <main>
-        <Suspense fallback={<SectionLoader />}>
-          <Hero />
-        </Suspense>
-        
-        <Suspense fallback={<SectionLoader />}>
-          <About />
-        </Suspense>
-        
-        <Suspense fallback={<SectionLoader />}>
-          <Skills />
-        </Suspense>
-        
-        <Suspense fallback={<SectionLoader />}>
-          <Projects />
-        </Suspense>
-      </main>
-      <SocialLinks />
-    </div>
-  );
-}
-
 function App() {
   return (
-    <>
-    <SmoothCursor/>
     <ThemeProvider>
-      <AppContent />
+      <Cursor />
+      <div className="min-h-screen bg-paper text-ink font-body">
+        <Header />
+        <main>
+          <Suspense fallback={<Loader />}>
+            <Hero />
+          </Suspense>
+          <Suspense fallback={<Loader />}>
+            <About />
+          </Suspense>
+          <Suspense fallback={<Loader />}>
+            <Skills />
+          </Suspense>
+          <Suspense fallback={<Loader />}>
+            <Projects />
+          </Suspense>
+        </main>
+        <SocialLinks />
+      </div>
+      <SpeedInsights />
     </ThemeProvider>
-
-    <SpeedInsights />
-
-    </>
   );
 }
 

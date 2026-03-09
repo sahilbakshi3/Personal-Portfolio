@@ -1,152 +1,40 @@
-/* App.css */
-.App {
-  text-align: center;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+/* app.css — clean slate */
 
-/* Ensure smooth transitions for all elements */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Dark mode scrollbar */
-.dark ::-webkit-scrollbar-track {
-  background: #374151;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #6b7280;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-}
-
-/* Dark mode body styles */
-html.dark {
-  background-color: #111827;
-  color: #f9fafb;
+  background: #f8f7f4;
 }
 
 body {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background: #f8f7f4;
+  color: #0a0a0a;
+  cursor: none;
 }
 
-.dark body {
-  background-color: #111827;
-  color: #f9fafb;
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f0efe9;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
 
-/* Line clamp utility */
+/* Remove the heavy global transition that makes everything sluggish */
+* {
+  box-sizing: border-box;
+}
+
+/* Utility: line-clamp */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
-/* Ensure all text elements inherit proper colors */
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: #f9fafb;
-}
-
-.dark p, .dark span, .dark div {
-  color: inherit;
-}
-
-/* Logo optimizations for better visibility and performance */
-.logo-container {
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-}
-
-.logo-image {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-/* Dark mode logo enhancements */
-.dark .logo-image {
-  filter: drop-shadow(0 0 8px rgba(147, 51, 234, 0.4));
-}
-
-/* Prevent logo from being affected by global dark mode filters */
-.dark .logo-container img {
-  mix-blend-mode: normal;
-}
-
-@keyframes rainbow-border {
-  0% { border-color: #ff6ec7; }
-  25% { border-color: #8b5cf6; }
-  50% { border-color: #4ade80; }
-  75% { border-color: #facc15; }
-  100% { border-color: #ff6ec7; }
-}
-
-.rainbow-border {
-  position: relative;
-}
-
-.rainbow-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  padding: 2px; /* border thickness */
-  border-radius: inherit;
-  background: linear-gradient(
-    90deg,
-    #ff6ec7,
-    #8b5cf6,
-    #4ade80,
-    #facc15,
-    #ff6ec7
-  );
-  animation: rainbow-border 4s linear infinite;
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: xor;
-}
-
-.clip-text {
-  color: transparent !important;
-  -webkit-text-fill-color: transparent; /* Safari fix */
-}
-
-@keyframes drift-slow {
-  0%   { transform: translate3d(0px, 0px, 0) scale(1); }
-  50%  { transform: translate3d(60px, -40px, 0) scale(1.06); }
-  100% { transform: translate3d(0px, 0px, 0) scale(1); }
-}
-
-.animate-drift-slow {
-  animation: drift-slow 14s ease-in-out infinite;
-  will-change: transform;
-}
-
-
-

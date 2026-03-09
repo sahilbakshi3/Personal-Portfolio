@@ -1,349 +1,228 @@
-import React, { useRef } from 'react';
-import { Download, MapPin, GraduationCap, Calendar, Code2, Briefcase, Sparkles, Heart, Trophy, Coffee } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { personalInfo } from '../../Data/PersonalInfo';
+// src/components/Sections/About/About.jsx
+import React from "react";
+import { motion } from "framer-motion";
+import { useReveal } from "../../Hooks/useReveal";
+import { personalInfo } from "../../Data/PersonalInfo";
 
-// Timeline Component (keeping your existing one)
-const Timeline = ({ data }) => {
-  const ref = useRef(null);
-  const containerRef = useRef(null);
-  const [height, setHeight] = React.useState(0);
+const fadeUp = (delay = 0) => ({
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay },
+  },
+});
 
-  React.useEffect(() => {
-    if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      setHeight(rect.height);
-    }
-  }, [ref]);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start 80%', 'end 50%'],
-  });
-
-  const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
-  const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
-
-  return (
-    <div ref={containerRef} className="relative w-full overflow-clip">
-      <div ref={ref} className="relative mx-auto max-w-7xl pb-20">
-        <motion.div
-          style={{ height: height + 'px' }}
-          className="absolute left-[50%] top-0 hidden w-[2px] translate-x-[-50%] overflow-hidden bg-gradient-to-b from-transparent via-gray-200 to-transparent md:block dark:via-gray-800"
-        >
-          <motion.div
-            style={{ height: heightTransform, opacity: opacityTransform }}
-            className="absolute inset-x-0 top-0 w-full bg-gradient-to-b from-blue-500 via-purple-500 to-transparent"
-          />
-        </motion.div>
-
-        {data.map((item, index) => {
-          const isLeft = index % 2 === 0;
-          return (
-            <div
-              key={index}
-              className="timeline-item relative mb-16 grid grid-cols-1 gap-4 last:mb-0 md:mb-20 md:grid-cols-[1fr_auto_1fr] md:gap-8"
-            >
-              {isLeft ? (
-                <>
-                  <motion.div 
-                    className="md:text-right"
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                  >
-                    <div className="inline-block text-left">
-                      <div className="mb-4 flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 dark:from-blue-900/30 dark:to-purple-900/30 dark:text-blue-300">
-                        <Calendar size={14} />
-                        {item.title}
-                      </div>
-                      <div className="rounded-2xl border border-gray-200/50 bg-white p-6 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50">
-                        {item.content}
-                      </div>
-                    </div>
-                  </motion.div>
-                  <div className="relative hidden md:block">
-                    <motion.div 
-                      className="sticky top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center"
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true, margin: '-100px' }}
-                      transition={{ duration: 0.3, delay: 0.4 }}
-                    >
-                      <div className="h-4 w-4 animate-pulse rounded-full border-4 border-blue-500 bg-white shadow-lg shadow-blue-500/50 dark:border-blue-400 dark:bg-gray-900" />
-                    </motion.div>
-                  </div>
-                  <div className="hidden md:block" />
-                </>
-              ) : (
-                <>
-                  <div className="hidden md:block" />
-                  <div className="relative hidden md:block">
-                    <motion.div 
-                      className="sticky top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center"
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true, margin: '-100px' }}
-                      transition={{ duration: 0.3, delay: 0.4 }}
-                    >
-                      <div className="h-4 w-4 animate-pulse rounded-full border-4 border-purple-500 bg-white shadow-lg shadow-purple-500/50 dark:border-purple-400 dark:bg-gray-900" />
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                  >
-                    <div className="mb-4 flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-purple-700 dark:from-purple-900/30 dark:to-pink-900/30 dark:text-purple-300">
-                      <Calendar size={14} />
-                      <span className='items-center'>{item.title}</span>
-                    </div>
-                    <div className="rounded-2xl border border-gray-200/50 bg-white p-6 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50">
-                      {item.content}
-                    </div>
-                  </motion.div>
-                </>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+const SectionLabel = ({ index, children }) => (
+  <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink3 mb-20 flex items-center gap-3">
+    <span>{index} —</span>
+    <span>{children}</span>
+  </p>
+);
 
 const About = () => {
-  const timelineData = [
-    {
-      title: personalInfo.education.year,
-      type: 'education',
-      content: (
-        <div>
-          <div className="mb-4 flex items-start gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg">
-              <GraduationCap className="text-white" size={24} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">
-                {personalInfo.education.degree}
-              </h3>
-              <p className="mb-2 text-sm font-medium text-blue-600 dark:text-blue-400">
-                {personalInfo.education.institution}
-              </p>
-            </div>
-          </div>
-          <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-            {personalInfo.education.field}
-          </p>
-          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500">
-            <MapPin size={12} />
-            <span>{personalInfo.education.location}</span>
-          </div>
-        </div>
-      ),
-    },
-    ...personalInfo.experience.map((exp) => ({
-      title: exp.duration,
-      type: 'experience',
-      content: (
-        <div>
-          <div className="mb-4 flex items-start gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg">
-              <Briefcase className="text-white" size={24} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">
-                {exp.title}
-              </h3>
-              <p className="mb-2 text-sm font-medium text-purple-600 dark:text-purple-400">
-                {exp.company}
-              </p>
-            </div>
-          </div>
-          <p className="mb-6 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-            {exp.description}
-          </p>
-          {exp.technologies && exp.technologies.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {exp.technologies.map((tech, i) => (
-                <span
-                  key={i}
-                  className="rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-1 text-xs font-medium text-blue-700 dark:from-blue-900/30 dark:to-purple-900/30 dark:text-blue-300"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      ),
-    })),
+  const [bioRef, bioVisible] = useReveal();
+  const [tlRef, tlVisible] = useReveal();
+
+  const stats = [
+    { value: "6+", label: "Projects" },
+    { value: "1+", label: "Years Exp." },
+    { value: "15+", label: "Technologies" },
   ];
 
   return (
-    <section id="about" className="relative overflow-hidden bg-white dark:bg-black px-4 py-20">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/4 top-20 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl" />
-        <div className="absolute bottom-20 right-1/4 h-96 w-96 rounded-full bg-purple-500/5 blur-3xl" />
-      </div>
+    <section
+      id="about"
+      className="px-16 py-32 border-b border-black/10 bg-paper"
+    >
+      <div className="max-w-7xl mx-auto">
+        <SectionLabel index="01">About</SectionLabel>
 
-      <div className="relative z-10 mx-auto max-w-7xl">
-        {/* Section Header */}
-        <motion.div 
-          className="mb-20 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        {/* ── Bio + Meta grid ── */}
+        <div
+          ref={bioRef}
+          className={`
+            grid grid-cols-1 lg:grid-cols-2 border border-black/10
+            transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+            ${bioVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}
+          `}
         >
-          <h2 className="mb-6 text-5xl font-bold text-gray-900 md:text-6xl dark:text-white">
-            About{' '}
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Me
-            </span>
-          </h2>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400">
-            My journey as a developer, the experiences that shaped me, and what drives my passion for technology
-          </p>
-        </motion.div>
-
-        {/* Profile Cards Grid */}
-        <div className="mb-20 grid gap-6 lg:grid-cols-3">
-          {/* Main Profile Card */}
-          <motion.div 
-            className="lg:col-span-2 rounded-2xl border border-gray-200/50 bg-white p-8 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="mb-6 flex items-start justify-between">
-              <div>
-                <h3 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
-                  {personalInfo.name}
-                </h3>
-                <p className="mb-4 text-lg font-medium text-blue-600 dark:text-blue-400">
-                  {personalInfo.title}
-                </p>
-                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <MapPin size={16} />
-                  <span>{personalInfo.location}</span>
-                </div>
-              </div>
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
-                <Code2 className="text-white" size={32} />
-              </div>
-            </div>
-
-            <p className="mb-6 leading-relaxed text-gray-700 dark:text-gray-300">
-              {personalInfo.bio.long}
+          {/* Bio */}
+          <div className="p-16 lg:border-r border-black/10">
+            <p className="font-display text-2xl font-light italic text-ink leading-relaxed mb-6">
+              An aspiring Software Developer with a passion for building things
+              that matter.
+            </p>
+            <p className="text-[15px] font-light text-ink2 leading-[1.85] mb-4">
+              Pursuing Electronics &amp; Instrumentation Engineering while
+              crafting intuitive web experiences. I believe good software is
+              invisible — it just works, beautifully.
+            </p>
+            <p className="text-[15px] font-light text-ink2 leading-[1.85]">
+              Beyond the screen: Formula 1 enthusiast, food explorer, and
+              relentless traveller. Always chasing the next interesting problem
+              to solve.
             </p>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-4 dark:from-blue-900/20 dark:to-blue-800/20">
-                <div className="mb-1 text-2xl font-bold text-blue-600 dark:text-blue-400">6+</div>
-                <div className="text-xs font-medium text-gray-600 dark:text-gray-400">Projects</div>
-              </div>
-              <div className="rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 p-4 dark:from-purple-900/20 dark:to-purple-800/20">
-                <div className="mb-1 text-2xl font-bold text-purple-600 dark:text-purple-400">1+</div>
-                <div className="text-xs font-medium text-gray-600 dark:text-gray-400">Years Exp.</div>
-              </div>
-              <div className="rounded-xl bg-gradient-to-br from-pink-50 to-pink-100 p-4 dark:from-pink-900/20 dark:to-pink-800/20">
-                <div className="mb-1 text-2xl font-bold text-pink-600 dark:text-pink-400">10+</div>
-                <div className="text-xs font-medium text-gray-600 dark:text-gray-400">Technologies</div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Interests Card */}
-          <motion.div 
-            className="rounded-2xl border border-gray-200/50 bg-white p-8 shadow-lg dark:border-gray-800/50 dark:bg-gray-900/50"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <div className="mb-6 flex items-center gap-2">
-              <Sparkles className="text-blue-600 dark:text-blue-400" size={24} />
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Interests & Hobbies</h3>
-            </div>
-            <div className="space-y-3">
-              {personalInfo.interests.map((interest, i) => (
-                <div 
+            {/* Stats */}
+            <div className="grid grid-cols-3 border-t border-black/10 mt-12">
+              {stats.map((s, i) => (
+                <div
                   key={i}
-                  className="flex items-center gap-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 p-3 dark:from-gray-800/50 dark:to-gray-800/30"
+                  className="pt-10 pr-6 border-r border-black/10 last:border-r-0"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
-                    {i === 0 && <Code2 size={16} className="text-white" />}
-                    {i === 1 && <Sparkles size={16} className="text-white" />}
-                    {i === 2 && <Trophy size={16} className="text-white" />}
-                    {i === 3 && <MapPin size={16} className="text-white" />}
-                    {i === 4 && <Coffee size={16} className="text-white" />}
-                    {i === 5 && <Heart size={16} className="text-white" />}
-                  </div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {interest}
+                  <span className="font-display font-light text-5xl text-ink leading-none block mb-2">
+                    {s.value}
+                  </span>
+                  <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-ink3">
+                    {s.label}
                   </span>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
+
+          {/* Meta */}
+          <div className="flex flex-col divide-y divide-black/10">
+            {[
+              { label: "Location", value: "Indore, India" },
+              {
+                label: "Education",
+                value: "B.E. Electronics & Instrumentation\nSGSITS, Indore",
+              },
+              {
+                label: "Current Role",
+                value: "Software Developer\nQuantiphi Technologies",
+              },
+              { label: "Availability", value: "Open to opportunities" },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex flex-col gap-2 px-12 py-9">
+                <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink3">
+                  {label}
+                </span>
+                <span className="text-[15px] text-ink font-light whitespace-pre-line leading-relaxed">
+                  {value}
+                </span>
+              </div>
+            ))}
+            {/* Resume */}
+            <div className="flex flex-col gap-2 px-12 py-9">
+              <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink3">
+                Resume
+              </span>
+              <a
+                href="/RESUME.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-ink border-b border-ink pb-0.5 w-fit hover:opacity-50 transition-opacity duration-200"
+              >
+                Download PDF ↗
+              </a>
+            </div>
+          </div>
         </div>
 
-        {/* Timeline Section */}
-        <div className="mb-12">
-          <motion.div 
-            className="mb-12 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+        {/* ── Journey / Timeline ── */}
+        <div className="mt-32">
+          <SectionLabel index="02">Journey</SectionLabel>
+
+          <h2
+            className="font-display font-light text-ink mb-16 leading-[0.95]"
+            style={{ fontSize: "clamp(48px, 7vw, 88px)" }}
           >
-            <h3 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
-              My{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Journey
-              </span>
-            </h3>
-            <p className="mx-auto max-w-2xl text-gray-600 dark:text-gray-400">
-              Education and professional experience that shaped my career
-            </p>
-          </motion.div>
-          <Timeline data={timelineData} />
+            Where I've
+            <br />
+            <em>been</em>
+          </h2>
+
+          <div
+            ref={tlRef}
+            className="flex flex-col border border-black/10 overflow-hidden"
+          >
+            {[
+              {
+                period: "Sep 2020 – May 2024",
+                type: "Education",
+                title: "Bachelor of Engineering",
+                org: "Shri G.S. Institute of Technology & Science · Indore",
+                desc: "Electronics and Instrumentation Engineering. Built a strong foundation in systems thinking, hardware-software integration, and problem-solving under constraints.",
+                tags: [],
+              },
+              {
+                period: "Feb 2024 – Aug 2024",
+                type: "Internship",
+                title: "Frontend Developer Intern",
+                org: "Quantiphi Technologies Solutions Pvt. Ltd.",
+                desc: "Developed responsive web applications using React and contributed to UI/UX improvements across the product suite.",
+                tags: ["React", "JavaScript", "CSS3", "Git"],
+              },
+              {
+                period: "Aug 2024 – Jun 2025",
+                type: "Full-time",
+                title: "Software Developer",
+                org: "Quantiphi Technologies Solutions Pvt. Ltd.",
+                desc: "Enhanced Dociphi — a GenAI-based document processing SaaS. Contributed to a 3% reduction in operational costs through automation.",
+                tags: ["React", "Python", "JavaScript", "GenAI", "Git"],
+              },
+            ].map((entry, i) => (
+              <div
+                key={i}
+                className={`
+                  grid grid-cols-1 md:grid-cols-[200px_1px_1fr]
+                  border-b border-black/10 last:border-b-0
+                  transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+                  ${
+                    tlVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-5"
+                  }
+                `}
+                style={{ transitionDelay: `${i * 120}ms` }}
+              >
+                {/* Date */}
+                <div className="px-10 pt-12 pb-4 md:pb-12">
+                  <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-ink3 block mb-2">
+                    Period
+                  </span>
+                  <span className="font-display font-light text-xl text-ink2 leading-snug">
+                    {entry.period.split("–").join("–\n")}
+                  </span>
+                </div>
+
+                {/* Divider */}
+                <div className="hidden md:block bg-black/10" />
+
+                {/* Content */}
+                <div className="px-10 md:px-16 pb-12 pt-4 md:pt-12">
+                  <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-ink3 mb-4">
+                    {entry.type}
+                  </p>
+                  <h3 className="font-display font-light text-[32px] text-ink leading-tight mb-1">
+                    {entry.title}
+                  </h3>
+                  <p className="text-sm text-ink3 mb-5 font-light">
+                    {entry.org}
+                  </p>
+                  <p className="text-[15px] text-ink2 font-light leading-[1.8] max-w-xl">
+                    {entry.desc}
+                  </p>
+                  {entry.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-6">
+                      {entry.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="font-mono text-[10px] tracking-[0.12em] uppercase text-ink3 border border-black/15 px-3 py-1"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-
-        {/* CTA */}
-        <motion.div 
-          className="text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <a
-            href='/RESUME.pdf'
-            target='_blank'
-            rel='noopener noreferrer'
-            className='relative inline-block overflow-hidden rounded-lg p-0.5'
-          
-          >
-
-            <button className="relative inline-block overflow-hidden rounded-lg p-0.5">
-              <div className="absolute top-0 left-0 w-[200%] h-full animate-[rainbow-slide_0.75s_linear_infinite]"
-                  style={{
-                    background: 'linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b)',
-                    backgroundSize: '50% 100%'
-                  }} />
-              <span className="relative z-10 flex items-center gap-2 rounded-md bg-white px-6 py-3.5 text-lg font-medium text-black dark:bg-black dark:text-white">
-                <Download size={20} />
-                Download Resume
-              </span>
-            </button>
-          </a>
-        </motion.div>
       </div>
     </section>
   );

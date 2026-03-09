@@ -2,16 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
+  html {
+    background: #f8f7f4;
+  }
+
+  /* Hide default cursor everywhere — our custom dot handles it */
   *,
   *::before,
   *::after {
-    cursor: none !important;
-  }
-  
-  body,
-  html {
     cursor: none !important;
   }
 }
