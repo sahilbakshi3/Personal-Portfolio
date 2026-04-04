@@ -23,7 +23,7 @@ export const useReveal = (options = {}) => {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return [ref, visible];
 };
