@@ -6,11 +6,4 @@
   html {
     background: #f8f7f4;
   }
-
-  /* Hide default cursor everywhere — our custom dot handles it */
-  *,
-  *::before,
-  *::after {
-    cursor: none !important;
-  }
 }

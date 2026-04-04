@@ -1,5 +1,5 @@
 // src/components/Sections/Projects/ProjectModal.jsx
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 
 const FADE_MS = 240;

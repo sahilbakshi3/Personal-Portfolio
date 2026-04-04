@@ -1,17 +1,5 @@
-// src/components/Sections/About/About.jsx
 import React from "react";
-import { motion } from "framer-motion";
 import { useReveal } from "../../Hooks/useReveal";
-import { personalInfo } from "../../Data/PersonalInfo";
-
-const fadeUp = (delay = 0) => ({
-  hidden: { opacity: 0, y: 24 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay },
-  },
-});
 
 const SectionLabel = ({ index, children }) => (
   <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink3 mb-20 flex items-center gap-3">
