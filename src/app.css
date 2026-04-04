@@ -1,37 +1,74 @@
-/* app.css — clean slate */
-
+/* app.css */
 html {
   scroll-behavior: smooth;
   background: #f8f7f4;
 }
-
 body {
   background: #f8f7f4;
   color: #0a0a0a;
-  cursor: none;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
   background: #f0efe9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
+  background: #c8a96e;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #999;
+  background: #b8943e;
 }
 
-/* Remove the heavy global transition that makes everything sluggish */
 * {
   box-sizing: border-box;
 }
 
-/* Utility: line-clamp */
+/* Gold shimmer utility used on section numbers */
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    #c8a96e 0%,
+    #f0d080 40%,
+    #c8a96e 60%,
+    #a87840 100%
+  );
+  background-size: 400px 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2.5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+/* Hover underline grow */
+.underline-grow {
+  position: relative;
+}
+.underline-grow::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #0a0a0a;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.underline-grow:hover::after {
+  width: 100%;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;

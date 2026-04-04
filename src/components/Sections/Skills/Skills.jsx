@@ -4,10 +4,15 @@ import { useReveal } from "../../Hooks/useReveal";
 import { skills as skillsByCategory } from "../../Data/Skills";
 
 const SectionLabel = ({ index, children }) => (
-  <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-ink3 mb-20 flex items-center gap-3">
-    <span>{index} —</span>
-    <span>{children}</span>
-  </p>
+  <div className="flex items-center gap-4 mb-20">
+    <span className="text-shimmer font-mono text-[11px] tracking-[0.2em] uppercase">
+      {index}
+    </span>
+    <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-ink3">
+      — {children}
+    </span>
+    <div className="flex-1 h-px bg-gradient-to-r from-accent/30 to-transparent" />
+  </div>
 );
 
 const Skills = () => {
@@ -16,13 +21,13 @@ const Skills = () => {
   return (
     <section
       id="skills"
-      className="px-16 py-32 border-b border-black/10 bg-paper2"
+      className="px-8 md:px-16 py-32 border-b border-black/10 bg-paper2"
     >
       <div className="max-w-7xl mx-auto">
         <SectionLabel index="03">Skills</SectionLabel>
 
         <h2
-          className="font-display font-light text-ink mb-16 leading-[0.95]"
+          className="font-display font-light text-ink mb-16 leading-[0.92]"
           style={{ fontSize: "clamp(48px, 7vw, 88px)" }}
         >
           What I<br />
@@ -40,32 +45,38 @@ const Skills = () => {
           {skillsByCategory.map((cat, ci) => (
             <div
               key={cat.category}
-              className="p-14 md:border-r border-black/10 last:border-r-0 border-b md:border-b-0 last:border-b-0"
-              style={{ transitionDelay: `${ci * 80}ms` }}
+              className="p-10 md:p-14 border-b md:border-b-0 md:border-r border-black/10 last:border-r-0 last:border-b-0"
             >
-              {/* Category label */}
-              <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink3 mb-10 pb-5 border-b border-black/10">
-                {cat.category}
-              </p>
+              {/* Category header with accent dot */}
+              <div className="flex items-center gap-2 mb-10 pb-5 border-b border-black/10">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
+                <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink3">
+                  {cat.category}
+                </p>
+              </div>
 
-              {/* Skill list */}
               <ul className="flex flex-col">
                 {cat.items.map((skill, si) => (
                   <li
                     key={skill.name}
                     className="
-                      font-display font-light text-[22px] text-ink
+                      group font-display font-light text-[22px] text-ink
                       py-4 border-b border-black/10 last:border-b-0
                       flex items-center justify-between
-                      group cursor-default
-                      transition-colors duration-200 hover:text-ink3
+                      cursor-default
+                      hover:text-accent
+                      transition-colors duration-200
                     "
-                    style={{ transitionDelay: `${(ci * 6 + si) * 30}ms` }}
+                    style={{
+                      transitionDelay: visible
+                        ? `${(ci * 6 + si) * 25}ms`
+                        : "0ms",
+                    }}
                   >
                     {skill.name}
                     <span
                       className="
-                      text-xs text-ink3 font-body
+                      font-body text-xs text-ink3
                       opacity-0 -translate-x-1
                       group-hover:opacity-100 group-hover:translate-x-0
                       transition-all duration-200
@@ -79,6 +90,9 @@ const Skills = () => {
             </div>
           ))}
         </div>
+
+        {/* Bottom accent strip */}
+        <div className="h-px mt-0 bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
       </div>
     </section>
   );

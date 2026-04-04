@@ -45,24 +45,19 @@ const Header = () => {
 
   return (
     <>
-      {/* ── Desktop nav ── */}
       <header
         className={`
           fixed top-0 left-0 right-0 z-50
           flex items-center justify-between
-          px-16 py-7
+          px-8 md:px-16 h-16
           transition-all duration-500
-          ${
-            scrolled
-              ? "bg-paper/90 backdrop-blur-md border-b border-black/8"
-              : "bg-transparent"
-          }
+          ${scrolled ? "bg-paper/95 backdrop-blur-md border-b border-black/8 shadow-sm" : "bg-transparent"}
         `}
       >
-        {/* Logo mark */}
+        {/* Logo */}
         <button
           onClick={() => scrollTo("home")}
-          className="font-mono text-xs tracking-[0.18em] uppercase text-ink hover:text-ink3 transition-colors"
+          className="font-mono text-[11px] tracking-[0.22em] uppercase text-ink hover:text-accent transition-colors duration-300"
         >
           SB
         </button>
@@ -73,17 +68,26 @@ const Header = () => {
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className={`
-                font-mono text-[11px] tracking-[0.14em] uppercase transition-colors duration-200
-                ${activeSection === item.id ? "text-ink" : "text-ink3 hover:text-ink"}
-              `}
+              className="relative font-mono text-[11px] tracking-[0.14em] uppercase transition-colors duration-200 group"
             >
-              {item.label}
+              <span
+                className={
+                  activeSection === item.id
+                    ? "text-ink"
+                    : "text-ink3 group-hover:text-ink"
+                }
+              >
+                {item.label}
+              </span>
+              {/* active gold dot */}
+              {activeSection === item.id && (
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-accent" />
+              )}
             </button>
           ))}
         </nav>
 
-        {/* Mobile hamburger */}
+        {/* Mobile toggle */}
         <button
           className="md:hidden font-mono text-[11px] tracking-[0.14em] uppercase text-ink3 hover:text-ink transition-colors"
           onClick={() => setMenuOpen((o) => !o)}
@@ -93,20 +97,27 @@ const Header = () => {
         </button>
       </header>
 
-      {/* ── Mobile dropdown ── */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-paper flex flex-col justify-center items-center gap-10 md:hidden">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollTo(item.id)}
-              className="font-display font-light text-5xl text-ink hover:text-ink3 transition-colors"
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Mobile fullscreen menu */}
+      <div
+        className={`
+          fixed inset-0 z-40 bg-paper flex flex-col justify-center items-center gap-10 md:hidden
+          transition-all duration-500
+          ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
+        `}
+      >
+        {/* decorative gold line */}
+        <div className="absolute top-1/2 left-0 w-full h-px bg-accent/20" />
+        {navItems.map((item, i) => (
+          <button
+            key={item.id}
+            onClick={() => scrollTo(item.id)}
+            className="font-display font-light text-5xl text-ink hover:text-accent transition-colors duration-200 relative z-10"
+            style={{ transitionDelay: menuOpen ? `${i * 60}ms` : "0ms" }}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
     </>
   );
 };

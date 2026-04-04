@@ -3,7 +3,6 @@ import React, { lazy, Suspense } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import Header from "./components/Layout/Header/Header";
 import SocialLinks from "./components/common/SocialLinks/SocialLinks";
-import Cursor from "./components/ui/Cursor";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import "./app.css";
 
@@ -20,10 +19,9 @@ const Loader = () => (
   </div>
 );
 
-function App() {
+export default function App() {
   return (
     <ThemeProvider>
-      <Cursor />
       <div className="min-h-screen bg-paper text-ink font-body">
         <Header />
         <main>
@@ -46,5 +44,3 @@ function App() {
     </ThemeProvider>
   );
 }
-
-export default App;
